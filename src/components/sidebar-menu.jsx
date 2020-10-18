@@ -1,0 +1,50 @@
+import React, { Component } from "react";
+import icon from "../images/miracle_logo.png";
+import { Link } from "react-router-dom";
+
+class SidebarMenu extends Component {
+  state = {
+    activeItem: 0,
+  };
+  render() {
+    const { activeItem } = this.state;
+    const { items } = this.props;
+    return (
+      <aside className="sidebar">
+        <div className="title">
+          <img src={icon} alt="logo" />
+        </div>
+        <nav className="menu">
+          <ul>
+            {items.map((item) => {
+              return (
+                <li
+                  key={item.id}
+                  onClick={() => {
+                    this.handleMenuItemClick(item);
+                  }}
+                >
+                  <Link
+                    to={item.link}
+                    className={items[activeItem] === item ? "active" : ""}
+                  >
+                    <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
+                    {item.title}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+    );
+  }
+
+  handleMenuItemClick = (item) => {
+    const sidebarItems = this.props.items;
+    const index = sidebarItems.indexOf(item);
+    this.setState({ activeItem: index });
+  };
+}
+
+export default SidebarMenu;
