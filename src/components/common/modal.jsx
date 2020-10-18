@@ -27,7 +27,6 @@ class Modal extends Component {
         }, 10);
       });
     }
-    console.log("Modal Buttons: ", listOfModalButtons.item(0));
   }
 
   handleModalBackgroundClick = () => {

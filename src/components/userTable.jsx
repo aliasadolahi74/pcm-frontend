@@ -6,14 +6,14 @@ class UserTable extends Component {
   state = {
     users: [
       {
-        key: "1",
+        key: 12,
         username: "aliasadolahi",
         name: "علی اسدالهی",
         registerDate: "1399/07/03",
         status: 1,
       },
       {
-        key: "2",
+        key: 13,
         username: "abfa",
         name: "آب و فاضلاب لرستان",
         registerDate: "1399/07/04",
@@ -26,7 +26,14 @@ class UserTable extends Component {
       { name: "username", label: "نام کاربری" },
       { name: "registerDate", label: "تاریخ ثبت‌نام" },
       { name: "status", label: "وضعیت" },
-      { name: "detailsButton", label: "" },
+      {
+        name: "detailsButton",
+        content: (item) => (
+          <Link to={"/admin/users/" + item.username}>
+            <i className="fa fa-info-circle"></i>
+          </Link>
+        ),
+      },
     ],
   };
   render() {

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import Modal from "./common/modal";
+import DeviceTable from "./deviceTable";
 
 class Devices extends Component {
   state = {};
   render() {
     return (
       <React.Fragment>
-        <section>
+        <section className="mb-2">
           <div className="section-header">
             <h1 className="section-title">دستگاه‌ها</h1>
             <div className="button-container">
@@ -21,6 +22,7 @@ class Devices extends Component {
           </div>
           <Modal id="addDeviceModal">اضافه کردن دستگاه</Modal>
         </section>
+        <DeviceTable />
       </React.Fragment>
     );
   }
