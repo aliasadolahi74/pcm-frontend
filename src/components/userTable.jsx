@@ -4,23 +4,6 @@ import Table from "./common/table";
 
 class UserTable extends Component {
   state = {
-    users: [
-      {
-        key: 12,
-        username: "aliasadolahi",
-        name: "علی اسدالهی",
-        registerDate: "1399/07/03",
-        status: 1,
-      },
-      {
-        key: 13,
-        username: "abfa",
-        name: "آب و فاضلاب لرستان",
-        registerDate: "1399/07/04",
-        status: 1,
-      },
-    ],
-
     columns: [
       { name: "name", label: "نام" },
       { name: "username", label: "نام کاربری" },
@@ -29,15 +12,17 @@ class UserTable extends Component {
       {
         name: "detailsButton",
         content: (item) => (
-          <Link to={"/admin/users/" + item.username}>
-            <i className="fa fa-info-circle"></i>
+          <Link to={"/admin/user/" + item["username"]}>
+            جزئیات
+            <i className="fa fa-info-circle mr-1"></i>
           </Link>
         ),
       },
     ],
   };
   render() {
-    const { users, columns } = this.state;
+    const { columns } = this.state;
+    const { users } = this.props;
     return <Table isCountable={true} columns={columns} data={users} />;
   }
 }

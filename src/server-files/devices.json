@@ -1,0 +1,31 @@
+{
+    "devices": [
+        {
+          "key": "1",
+          "deviceID": "Device1",
+          "customerName": "علی اسدالهی",
+          "status": 1
+        },
+        {
+          "key": "2",
+          "deviceID": "Device2",
+          "customerName": "آبفا",
+          "registerDate": "1399/07/03",
+          "status": 1
+        },
+        {
+            "key": "3",
+            "deviceID": "Device3",
+            "customerName": "پشته",
+            "registerDate": "1399/07/03",
+            "status": 1
+          },
+          {
+            "key": "4",
+            "deviceID": "Device4",
+            "customerName": "فلک الدین",
+            "registerDate": "1399/07/03",
+            "status": 1
+          }
+      ]
+}

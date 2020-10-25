@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-import icon from "../images/miracle_logo.png";
-import { Link } from "react-router-dom";
+import icon from "../images/logo.png";
+import { NavLink } from "react-router-dom";
 
 class SidebarMenu extends Component {
-  state = {
-    activeItem: 0,
-  };
   render() {
-    const { activeItem } = this.state;
     const { items } = this.props;
     return (
       <aside className="sidebar">
@@ -24,13 +20,18 @@ class SidebarMenu extends Component {
                     this.handleMenuItemClick(item);
                   }}
                 >
-                  <Link
+                  <NavLink
                     to={item.link}
-                    className={items[activeItem] === item ? "active" : ""}
+                    isActive={(match) => {
+                      if (!match || item.link === "#") {
+                        return false;
+                      }
+                      return true;
+                    }}
                   >
                     <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
                     {item.title}
-                  </Link>
+                  </NavLink>
                 </li>
               );
             })}

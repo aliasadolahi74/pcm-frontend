@@ -53,11 +53,11 @@ body {
   flex-direction: row;
   align-items: center;
   font-size: 23px;
-  padding: 0 40px;
+  padding: 0 50px;
 }
 
 .sidebar > .title > img {
-  height: 30px;
+  width: 100%;
 }
 
 .sidebar > .menu > ul {
@@ -200,6 +200,8 @@ body {
   min-height: 100%;
   align-items: stretch;
   padding: 45px 40px 30px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 .section-header {
@@ -254,3 +256,17 @@ body {
 }
 
 /* Modal - End */
+
+/* PaginationBar - START */
+.page-item:first-child .page-link {
+  border-radius: unset;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.page-item:last-child .page-link {
+  border-radius: unset;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+/* PaginationBar - End */

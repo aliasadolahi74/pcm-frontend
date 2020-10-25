@@ -4,22 +4,6 @@ import { Link } from "react-router-dom";
 
 class DeviceTable extends Component {
   state = {
-    devices: [
-      {
-        key: "1",
-        deviceID: "Device1",
-        customerName: "علی اسدالهی",
-        status: 1,
-      },
-      {
-        key: "2",
-        deviceID: "Device2",
-        customerName: "آبفا",
-        registerDate: "1399/07/03",
-        status: 1,
-      },
-    ],
-
     columns: [
       { name: "deviceID", label: "شناسه دستگاه" },
       { name: "customerName", label: "نام مشتری" },
@@ -27,8 +11,9 @@ class DeviceTable extends Component {
       {
         name: "detailsButton",
         content: (item) => (
-          <Link to={"/admin/devices/" + item.deviceID}>
-            <i className="fa fa-info-circle"></i>
+          <Link to={"/admin/device/" + item.deviceID}>
+            جزئیات
+            <i className="fa fa-info-circle mr-1"></i>
           </Link>
         ),
       },
@@ -36,7 +21,8 @@ class DeviceTable extends Component {
   };
 
   render() {
-    const { devices, columns } = this.state;
+    const { columns } = this.state;
+    const { devices } = this.props;
     return <Table isCountable={true} columns={columns} data={devices} />;
   }
 }

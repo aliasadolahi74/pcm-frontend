@@ -1,10 +1,24 @@
 import React, { Component } from "react";
 import Modal from "./common/modal";
+import Pagination from "./common/pagination";
 import DeviceTable from "./deviceTable";
+import deviceList from "../server-files/devices.json";
+import { paginate } from "./utils/paginate";
 
 class Devices extends Component {
-  state = {};
+  state = {
+    allDevices: deviceList.devices,
+    currentPage: 1,
+    pageSize: 2,
+  };
+
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
+  };
+
   render() {
+    const { allDevices, currentPage, pageSize } = this.state;
+    const devices = paginate(allDevices, currentPage, pageSize);
     return (
       <React.Fragment>
         <section className="mb-2">
@@ -22,7 +36,13 @@ class Devices extends Component {
           </div>
           <Modal id="addDeviceModal">اضافه کردن دستگاه</Modal>
         </section>
-        <DeviceTable />
+        <DeviceTable devices={devices} />
+        <Pagination
+          itemsCount={allDevices.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }

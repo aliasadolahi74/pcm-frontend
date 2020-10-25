@@ -7,6 +7,7 @@ import Users from "./users";
 import Devices from "./devices";
 import Settings from "./settings";
 import User from "./user";
+import Device from "./device";
 
 class AdminPanel extends Component {
   state = {};
@@ -17,7 +18,6 @@ class AdminPanel extends Component {
         title: "داشبورد",
         link: "/admin/dashboard",
         fontAwesomeIcon: "fa-database",
-        isActive: true,
       },
       {
         id: "2",
@@ -54,6 +54,7 @@ class AdminPanel extends Component {
               <Route path="/admin/users" component={Users} />
               <Route path="/admin/user/:username" component={User} />
               <Route path="/admin/devices" component={Devices} />
+              <Route path="/admin/device/:deviceID" component={Device} />
               <Route path="/admin/settings" component={Settings} />
               <Route path="/admin/not-found" component={NotFound} />
               <Redirect from="/admin/" exact to="/admin/dashboard" />

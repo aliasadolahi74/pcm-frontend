@@ -1,0 +1,25 @@
+{
+    "users": [
+        {
+          "key": 1,
+          "username": "aliasadolahi",
+          "name": "علی اسدالهی",
+          "registerDate": "1399/07/03",
+          "status": 1
+        },
+        {
+          "key": 2,
+          "username": "abfa_lorestan",
+          "name": "آب و فاضلاب لرستان",
+          "registerDate": "1399/07/04",
+          "status": 1
+        },
+        {
+            "key": 3,
+            "username": "abfa_tehran",
+            "name": "آب و فاضلاب تهران",
+            "registerDate": "1399/07/04",
+            "status": 1
+          }
+      ]
+}

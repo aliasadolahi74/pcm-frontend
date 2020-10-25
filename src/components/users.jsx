@@ -1,13 +1,25 @@
 import React, { Component } from "react";
 import Modal from "./common/modal";
 import UserTable from "./userTable";
+import Pagination from "./common/pagination";
+import userList from "../server-files/users.json";
+import { paginate } from "./utils/paginate";
 
 class Users extends Component {
   state = {
     addUserModalVisible: false,
+    currentPage: 1,
+    pageSize: 2,
+    allUsers: userList.users,
+  };
+
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
   };
 
   render() {
+    const { allUsers, currentPage, pageSize } = this.state;
+    const users = paginate(allUsers, currentPage, pageSize);
     return (
       <React.Fragment>
         <section className="mb-2">
@@ -25,7 +37,13 @@ class Users extends Component {
           </div>
           <Modal id="addUserModal">اضافه کردن کاربر</Modal>
         </section>
-        <UserTable />
+        <UserTable users={users} />
+        <Pagination
+          itemsCount={allUsers.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
