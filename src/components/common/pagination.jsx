@@ -4,16 +4,19 @@ import _ from "lodash";
 class Pagination extends Component {
   render() {
     const { currentPage, itemsCount, onPageChange } = this.props;
+
     const numberOfPages = this.getNumberOfPages(itemsCount);
+
+    console.log();
 
     return (
       <nav
-        aria-label="Page navigation example"
+        aria-label="Page navigation"
         className="d-flex justify-content-center mt-auto"
       >
         <ul className="pagination">
           {numberOfPages === 1
-            ? null
+            ? ""
             : _.range(1, numberOfPages + 1).map((page) => (
                 <li
                   className={
@@ -24,7 +27,7 @@ class Pagination extends Component {
                     onPageChange(page);
                   }}
                 >
-                  <a className="page-link" href="#">
+                  <a className="page-link" href="/#">
                     {page}
                   </a>
                 </li>

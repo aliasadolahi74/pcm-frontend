@@ -1,17 +1,48 @@
 import React, { Component } from "react";
-import Modal from "./common/modal";
 import UserTable from "./userTable";
 import Pagination from "./common/pagination";
-import userList from "../server-files/users.json";
 import { paginate } from "./utils/paginate";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import qs from "qs";
+import "../services/httpServices";
+import { authData } from "../services/authServices";
+import config from "../config.json";
 
 class Users extends Component {
   state = {
-    addUserModalVisible: false,
     currentPage: 1,
-    pageSize: 2,
-    allUsers: userList.users,
+    pageSize: 10,
+    allUsers: [],
   };
+
+  async componentDidMount() {
+    try {
+      const loginOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(authData),
+        url: `${config.apiBaseURL}/users.php`,
+      };
+      const usersInfo = await axios(loginOptions);
+      const errors = usersInfo.data.errors;
+
+      if (errors) {
+        alert(errors[0].message);
+      } else {
+        const allUsers = usersInfo.data.body || [];
+        this.setState({ allUsers });
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+
+      if (ex.response && ex.response.status === 403) {
+        alert("شما دسترسی لازم به این بهش را ندارید");
+      }
+    }
+  }
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -26,16 +57,11 @@ class Users extends Component {
           <div className="section-header">
             <h1 className="section-title">کاربران</h1>
             <div className="button-container">
-              <button
-                type="button"
-                className="btn btn-success handle-modal"
-                modal-id="addUserModal"
-              >
+              <Link className="btn btn-success" to="./new-user">
                 <i className="fa fa-user-plus"></i>
-              </button>
+              </Link>
             </div>
           </div>
-          <Modal id="addUserModal">اضافه کردن کاربر</Modal>
         </section>
         <UserTable users={users} />
         <Pagination

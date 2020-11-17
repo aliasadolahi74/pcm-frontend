@@ -15,6 +15,17 @@ body {
   height: 100%;
 }
 
+.table td {
+  vertical-align: middle;
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
 .panel-container {
   background: url("./images/background.jpg");
   background-size: cover;
@@ -245,6 +256,7 @@ body {
   height: 100%;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .vida-modal-container > div {
@@ -304,14 +316,195 @@ body {
   fill: #44c4a1;
 }
 
+.vida-tick-svg,
+.cross-rtl,
+.cross-ltr {
+  stroke-linecap: round;
+  stroke-width: 8;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+}
+
+.cross-rtl,
+.cross-ltr {
+  stroke: #ed1c24;
+  stroke-width: 8;
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
+}
+
+.cross-rtl {
+  animation: red-cross 500ms ease-in 300ms;
+  animation-fill-mode: both;
+}
+
+.cross-ltr {
+  animation: red-cross 500ms ease-in 800ms;
+  animation-fill-mode: both;
+}
+
 .vida-tick-svg {
-  stroke-dasharray: 2000;
-  stroke-dashoffset: 2000;
-  animation: appear-tick 3s infinite ease-out;
+  stroke: #06c58a;
+  stroke-dasharray: 100;
+  stroke-dashoffset: -100;
+  animation: appear-tick 1500ms ease-in;
+  animation-fill-mode: forwards;
 }
 
 @keyframes appear-tick {
   to {
     stroke-dashoffset: 0;
   }
+}
+
+@keyframes red-cross {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.tick-icon {
+  background-image: url(./icons/tick.svg);
+  width: 100px;
+  height: 100px;
+}
+
+/* Toggle Button ---- Start */
+
+.vida-toggle-button {
+  width: 60px;
+  height: 30px;
+  background-color: #e2e2e2;
+  border-radius: 30px;
+  display: block;
+  border: 1px solid #dadada;
+  position: relative;
+  box-sizing: content-box;
+  cursor: pointer;
+  transition: 300ms ease;
+}
+
+.vida-toggle-button:after {
+  content: "";
+  width: 26px;
+  height: 26px;
+  border-radius: 100%;
+  position: absolute;
+  background-color: #fff;
+  transition: 300ms ease;
+  left: 2px;
+  top: 2px;
+}
+
+.vida-toggle-button.active {
+  background-color: #2196f3;
+  border: 1px solid #2196f3;
+}
+
+.vida-toggle-button.active:after {
+  transform: translateX(30px);
+}
+/* Toggle Button ---- End */
+
+.device-info-container > span.label {
+  line-height: 32px;
+}
+
+.button-container {
+  display: grid;
+  grid-template-columns: 180px 100px;
+  row-gap: 10px;
+}
+
+.user-info-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  row-gap: 50px;
+  column-gap: 50px;
+  align-items: start;
+}
+
+.user-info-container > section {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 5px rgba(187, 187, 187, 0.1);
+  padding: 20px 20px 40px;
+}
+
+.user-info-container > section > .user-section-header,
+.user-devices-section-header {
+  margin-bottom: 30px;
+}
+
+.user-info-container > section .title {
+  color: #204abd;
+}
+
+.user-info-container > section > .user-info-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 20px;
+  align-items: center;
+  color: #5c5c5c;
+}
+
+.user-info-container > section > .user-info-box > span:nth-child(2n-1) {
+  font-weight: 900;
+  color: #007786;
+}
+
+.icon-btn {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.icon-btn:hover {
+  color: #204abd;
+}
+
+.devices-box {
+  color: #5c5c5c;
+}
+
+.checkbox-container > div {
+  display: grid;
+  grid-template-columns: 150px 50px;
+  row-gap: 10px;
+}
+
+.login-page-container {
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  padding: 5% 10%;
+  background-color: #f5f5fb;
+  box-sizing: border-box;
+}
+
+.login-page-container > .main-section {
+  background-color: #fff;
+}
+
+.login-page-container > .main-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto;
+}
+
+.login-title {
+  color: #204abd;
+}
+
+.login-form-container {
+  border-left: 1px dashed #cacaca;
+}
+
+.login-page-container .tmb-logo {
+  width: 100px;
+  margin-bottom: 40px;
 }

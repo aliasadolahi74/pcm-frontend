@@ -1,14 +1,31 @@
 import React, { Component } from "react";
 import Table from "./common/table";
 import { Link } from "react-router-dom";
-import { authData } from "./../services/authServices";
 
-class DeviceTable extends Component {
+class UserDevicesTable extends Component {
   state = {
     columns: [
       { name: "deviceID", label: "شناسه دستگاه" },
       { name: "deviceName", label: "نام دستگاه" },
-      { name: "nickname", label: "نام مشتری" },
+      {
+        name: "editName",
+        content: (item) => (
+          <i
+            className="fa fa-edit icon-btn"
+            onClick={() => {
+              this.handleEditDeviceNameClick(item);
+            }}
+          ></i>
+        ),
+      },
+      {
+        name: "deleteButton",
+        content: (item) => (
+          <button className="btn btn-outline-danger">
+            <i className="fa fa-trash"></i>
+          </button>
+        ),
+      },
       {
         name: "detailsButton",
         content: (item) => (
@@ -21,20 +38,15 @@ class DeviceTable extends Component {
     ],
   };
 
-  componentDidMount() {
-    if (!authData.isAdmin) {
-      const columns = this.state.columns.filter(
-        (item) => item.name !== "nickname"
-      );
-      this.setState({ columns });
-    }
-  }
-
   render() {
     const { columns } = this.state;
     const { devices } = this.props;
     return <Table isCountable={true} columns={columns} data={devices} />;
   }
+
+  handleEditDeviceNameClick = (item) => {
+    console.log(item);
+  };
 }
 
-export default DeviceTable;
+export default UserDevicesTable;

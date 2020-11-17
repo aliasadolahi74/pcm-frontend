@@ -5,9 +5,9 @@ import Table from "./common/table";
 class UserTable extends Component {
   state = {
     columns: [
-      { name: "name", label: "نام" },
+      { name: "nickname", label: "نام" },
       { name: "username", label: "نام کاربری" },
-      { name: "registerDate", label: "تاریخ ثبت‌نام" },
+      { name: "datetime", label: "تاریخ ثبت‌نام" },
       { name: "status", label: "وضعیت" },
       {
         name: "detailsButton",

@@ -5,12 +5,12 @@ import TableBody from "./tableBody";
 class Table extends Component {
   state = {};
   render() {
-    const { columns, data, isCountable } = this.props;
+    const { columns, data } = this.props;
 
     return (
       <table className="table">
-        <TableHeader isCountable={isCountable} columns={columns} />
-        <TableBody isCountable={isCountable} data={data} columns={columns} />
+        <TableHeader columns={columns} />
+        <TableBody data={data} columns={columns} />
       </table>
     );
   }

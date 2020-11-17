@@ -4,8 +4,8 @@ import "./App.css";
 import "./fontawesome/css/all.css";
 import AdminPanel from "./components/adminPanel";
 import NotFound from "./components/notFound";
-import LoginForm from "./components/loginForm";
 import { Route, Redirect, Switch } from "react-router-dom";
+import Login from "./components/login";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
       <Switch>
         <Route path="/admin" component={AdminPanel} />
         <Route path="/not-found" component={NotFound} />
-        <Route path="/login" component={LoginForm} />
+        <Route path="/login" component={Login} />
         <Redirect from="/" exact to="/admin" />
         <Redirect to="/not-found" />
       </Switch>

@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 class SidebarMenu extends Component {
   render() {
     const { items } = this.props;
+
     return (
       <aside className="sidebar">
         <div className="title">
@@ -42,9 +43,13 @@ class SidebarMenu extends Component {
   }
 
   handleMenuItemClick = (item) => {
-    const sidebarItems = this.props.items;
-    const index = sidebarItems.indexOf(item);
-    this.setState({ activeItem: index });
+    if (item.handler) {
+      item.handler();
+    } else {
+      const sidebarItems = this.props.items;
+      const index = sidebarItems.indexOf(item);
+      this.setState({ activeItem: index });
+    }
   };
 }
 
