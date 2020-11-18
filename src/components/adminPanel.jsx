@@ -12,6 +12,8 @@ import NewUser from "./newUser";
 import NewDevice from "./newDevice";
 import { authData } from "./../services/authServices";
 import Logout from "./logout";
+import EditNickname from "./editNickname";
+import EditPassword from "./editPassword";
 
 class AdminPanel extends Component {
   state = {
@@ -70,6 +72,14 @@ class AdminPanel extends Component {
               <Route path="/admin/new-user" component={NewUser} />
               <Route path="/admin/new-device" component={NewDevice} />
               <Route path="/admin/logout" component={Logout} />
+              <Route
+                path="/admin/editNickname/:clientUsername"
+                component={EditNickname}
+              />
+              <Route
+                path="/admin/editPassword/:clientUsername"
+                component={EditPassword}
+              />
               <Route path="/admin/not-found" component={NotFound} />
               <Redirect from="/admin/" exact to="/admin/dashboard" />
               <Redirect to="/admin/not-found" />

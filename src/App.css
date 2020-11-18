@@ -444,14 +444,14 @@ a:hover {
 
 .user-info-container > section > .user-info-box {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr;
   column-gap: 10px;
   row-gap: 20px;
   align-items: center;
   color: #5c5c5c;
 }
 
-.user-info-container > section > .user-info-box > span:nth-child(2n-1) {
+.user-info-container > section > .user-info-box > span:nth-child(3n-2) {
   font-weight: 900;
   color: #007786;
 }

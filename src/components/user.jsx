@@ -8,6 +8,7 @@ import qs from "qs";
 import config from "../config.json";
 import "../services/httpServices";
 import { authData } from "../services/authServices";
+import { Link } from "react-router-dom";
 
 class User extends Component {
   state = {
@@ -29,7 +30,6 @@ class User extends Component {
       url: `${config.apiBaseURL}/userInfo.php`,
     };
     const userInfoResponse = await axios(userInfoOptions);
-    console.log(userInfoResponse);
     const userInfo = userInfoResponse.data.body[0];
 
     const userDevicesOptions = {
@@ -57,15 +57,21 @@ class User extends Component {
           <section>
             <div className="user-section-header d-flex flex-row justify-content-between pl-2">
               <h4 className="title">اطلاعات کاربر</h4>
-              <i className="fa fa-user-edit icon-btn"></i>
             </div>
             <div className="user-info-box">
               <span>نام‌کاربری</span>
               <span>{username}</span>
+              <span></span>
               <span>نام‌</span>
               <span>{nickname}</span>
+              <Link to={"/admin/editNickname/" + username}>
+                <i className="fa fa-edit icon-btn"></i>
+              </Link>
               <span>رمز عبور</span>
               <span>رمزنگاری شده</span>
+              <Link to={"/admin/editPassword/" + username}>
+                <i className="fa fa-edit icon-btn"></i>
+              </Link>
               <span>تاریخ ثبت‌نام</span>
               <span className="datetime">{datetime}</span>
             </div>
