@@ -9,6 +9,7 @@ import qs from "qs";
 import config from "../config.json";
 import { getErrorString } from "./utils/error-converter";
 import Dialog from "./common/dialog";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class NewUserForm extends Form {
   state = {
@@ -55,7 +56,7 @@ class NewUserForm extends Form {
     const newUserResponse = await axios(newUserOptions);
     const { data: responseData } = newUserResponse;
     if (responseData.status === true) {
-      window.location = "/admin/users";
+      window.location = `${dir}/admin/users`;
     } else {
       this.setState({
         dialogIsVisible: true,

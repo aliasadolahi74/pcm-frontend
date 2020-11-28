@@ -10,6 +10,7 @@ import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "../services/authServices";
 import "../services/httpServices";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditPasswordForm extends Form {
   state = {
@@ -51,7 +52,7 @@ class EditPasswordForm extends Form {
     const editPasswordResponse = await axios(editPasswordOption);
     const status = editPasswordResponse.data.status;
     if (status) {
-      window.location = "/admin/user/" + clientUsername;
+      window.location = `${dir}/admin/user/clientUsername`;
     } else {
       this.setState({
         dialogIsVisible: true,

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "./common/table";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class UserTable extends Component {
   state = {
@@ -12,7 +13,7 @@ class UserTable extends Component {
       {
         name: "detailsButton",
         content: (item) => (
-          <Link to={"/admin/user/" + item["username"]}>
+          <Link to={`${dir}/admin/user/${item.username}`}>
             جزئیات
             <i className="fa fa-info-circle mr-1"></i>
           </Link>

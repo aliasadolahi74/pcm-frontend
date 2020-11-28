@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Table from "./common/table";
 import { Link } from "react-router-dom";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class UserDevicesTable extends Component {
   state = {
@@ -8,20 +9,14 @@ class UserDevicesTable extends Component {
       { name: "deviceID", label: "شناسه دستگاه" },
       { name: "deviceName", label: "نام دستگاه" },
       {
-        name: "editName",
-        content: (item) => (
-          <i
-            className="fa fa-edit icon-btn"
-            onClick={() => {
-              this.handleEditDeviceNameClick(item);
-            }}
-          ></i>
-        ),
-      },
-      {
         name: "deleteButton",
         content: (item) => (
-          <button className="btn btn-outline-danger">
+          <button
+            onClick={() => {
+              this.handleDeleteAssignmentClick(item);
+            }}
+            className="btn btn-outline-danger"
+          >
             <i className="fa fa-trash"></i>
           </button>
         ),
@@ -29,7 +24,7 @@ class UserDevicesTable extends Component {
       {
         name: "detailsButton",
         content: (item) => (
-          <Link to={"/admin/device/" + item.deviceID}>
+          <Link to={`${dir}/admin/device/${item.deviceID}/${item.phoneNumber}`}>
             جزئیات
             <i className="fa fa-info-circle mr-1"></i>
           </Link>
@@ -44,9 +39,11 @@ class UserDevicesTable extends Component {
     return <Table isCountable={true} columns={columns} data={devices} />;
   }
 
-  handleEditDeviceNameClick = (item) => {
-    console.log(item);
+  handleDeleteAssignmentClick = (item) => {
+    this.props.onDelete(item);
   };
+
+  handleEditDeviceNameClick = (item) => {};
 }
 
 export default UserDevicesTable;

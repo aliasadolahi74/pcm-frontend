@@ -3,6 +3,8 @@ import Table from "./common/table";
 import { Link } from "react-router-dom";
 import { authData } from "./../services/authServices";
 
+const dir = process.env.REACT_APP_CUSTOM_DIR;
+
 class DeviceTable extends Component {
   state = {
     columns: [
@@ -10,9 +12,22 @@ class DeviceTable extends Component {
       { name: "deviceName", label: "نام دستگاه" },
       { name: "nickname", label: "نام مشتری" },
       {
+        name: "deleteBtn",
+        content: (item) => (
+          <button
+            className="btn btn-outline-danger"
+            onClick={() => {
+              this.handleDelete(item);
+            }}
+          >
+            <i className="fa fa-trash mr-1"></i>
+          </button>
+        ),
+      },
+      {
         name: "detailsButton",
         content: (item) => (
-          <Link to={"/admin/device/" + item.deviceID}>
+          <Link to={`${dir}/admin/device/${item.deviceID}/${item.phoneNumber}`}>
             جزئیات
             <i className="fa fa-info-circle mr-1"></i>
           </Link>
@@ -24,11 +39,15 @@ class DeviceTable extends Component {
   componentDidMount() {
     if (!authData.isAdmin) {
       const columns = this.state.columns.filter(
-        (item) => item.name !== "nickname"
+        (item) => item.name !== "nickname" && item.name !== "deleteBtn"
       );
       this.setState({ columns });
     }
   }
+
+  handleDelete = (item) => {
+    this.props.onDeviceDelete(item);
+  };
 
   render() {
     const { columns } = this.state;

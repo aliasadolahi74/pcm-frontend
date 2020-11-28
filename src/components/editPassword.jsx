@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { authData } from "../services/authServices";
 import "../services/httpServices";
 import EditPasswordForm from "./editPasswordForm";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditPassword extends Component {
   state = {
@@ -10,7 +11,7 @@ class EditPassword extends Component {
 
   componentDidMount() {
     if (!authData.isAdmin) {
-      this.props.history.replace("/admin/dashboard");
+      this.props.history.replace(`${dir}/admin/dashboard`);
     }
   }
 

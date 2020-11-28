@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import UserDevicesTable from "./userDevicesTable";
 import { paginate } from "./utils/paginate";
 import Pagination from "./common/pagination";
-import Modal from "./common/modal";
 import axios from "axios";
 import qs from "qs";
 import config from "../config.json";
 import "../services/httpServices";
-import { authData } from "../services/authServices";
 import { Link } from "react-router-dom";
+import { getErrorString } from "./utils/error-converter";
+import { authData } from "./../services/authServices";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class User extends Component {
   state = {
@@ -16,12 +17,13 @@ class User extends Component {
     devices: [],
     currentPage: 1,
     pageSize: 5,
+    authData: { username: authData.username, token: authData.token },
   };
 
   async componentDidMount() {
     const data = {
       clientUsername: this.props.match.params.username,
-      ...authData,
+      ...this.state.authData,
     };
     const userInfoOptions = {
       method: "POST",
@@ -30,18 +32,19 @@ class User extends Component {
       url: `${config.apiBaseURL}/userInfo.php`,
     };
     const userInfoResponse = await axios(userInfoOptions);
-    const userInfo = userInfoResponse.data.body[0];
+    if (userInfoResponse.data.status) {
+      const userInfo = userInfoResponse.data.body[0];
 
-    const userDevicesOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      data: qs.stringify(data),
-      url: `${config.apiBaseURL}/userDevices.php`,
-    };
-    const userDevicesResponse = await axios(userDevicesOptions);
-    console.log(userDevicesResponse);
-    const devices = userDevicesResponse.data.body;
-    this.setState({ userInfo, devices });
+      const userDevicesOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(data),
+        url: `${config.apiBaseURL}/userDevices.php`,
+      };
+      const userDevicesResponse = await axios(userDevicesOptions);
+      const devices = userDevicesResponse.data.body;
+      this.setState({ userInfo, devices });
+    }
   }
 
   render() {
@@ -64,12 +67,12 @@ class User extends Component {
               <span></span>
               <span>نام‌</span>
               <span>{nickname}</span>
-              <Link to={"/admin/editNickname/" + username}>
+              <Link to={`${dir}/admin/editNickname/${username}`}>
                 <i className="fa fa-edit icon-btn"></i>
               </Link>
               <span>رمز عبور</span>
               <span>رمزنگاری شده</span>
-              <Link to={"/admin/editPassword/" + username}>
+              <Link to={`${dir}/admin/editPassword/${username}`}>
                 <i className="fa fa-edit icon-btn"></i>
               </Link>
               <span>تاریخ ثبت‌نام</span>
@@ -79,15 +82,18 @@ class User extends Component {
           <section>
             <div className="user-devices-section-header d-flex flex-row justify-content-between">
               <h4 className="title">دستگاه‌ها</h4>
-              <button
-                className="btn btn-outline-success handle-modal"
-                modal-id="allocate-device-modal"
+              <Link
+                to={`${dir}/admin/device-assignment/${username}`}
+                className="btn btn-outline-success"
               >
                 <i className="fa fa-plus"></i>&nbsp; تخصیص دستگاه
-              </button>
+              </Link>
             </div>
             <div className="devices-box">
-              <UserDevicesTable devices={devices} />
+              <UserDevicesTable
+                devices={devices}
+                onDelete={this.handleDelete}
+              />
               <Pagination
                 currentPage={currentPage}
                 itemsCount={allDevices.length}
@@ -96,11 +102,39 @@ class User extends Component {
               />
             </div>
           </section>
-          <Modal id="allocate-device-modal"></Modal>
         </div>
       </div>
     );
   }
+
+  handleDelete = async (item) => {
+    const { authData } = this.state;
+    try {
+      const options = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify({ ...authData, deviceID: item.deviceID }),
+        url: `${config.apiBaseURL}/delete-device-assignment.php`,
+      };
+
+      const deleteDeviceAssignmentResponse = await axios(options);
+      const { data: responseData } = deleteDeviceAssignmentResponse;
+      const status = responseData.status;
+      if (status) {
+        const devices = [...this.state.devices];
+        const newDevices = devices.filter(
+          (deviceItem) => item.deviceID !== deviceItem.deviceID
+        );
+        this.setState({ devices: newDevices });
+      } else {
+        alert(getErrorString(responseData.errors));
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+    }
+  };
 
   handleEditDeviceNameClick = (item) => {
     console.log(item);

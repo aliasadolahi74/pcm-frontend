@@ -1,7 +1,11 @@
 import jwtDecode from "jwt-decode";
 
 const token = localStorage.getItem("token");
-const data = jwtDecode(token);
+let data = {};
+try {
+  data = jwtDecode(token);
+} catch (e) {}
+
 export const authData = {
   username: data.username,
   token: token,

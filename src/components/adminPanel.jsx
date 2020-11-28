@@ -14,6 +14,9 @@ import { authData } from "./../services/authServices";
 import Logout from "./logout";
 import EditNickname from "./editNickname";
 import EditPassword from "./editPassword";
+import DeviceAssignment from "./device-assignment";
+
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class AdminPanel extends Component {
   state = {
@@ -21,25 +24,25 @@ class AdminPanel extends Component {
       {
         id: "1",
         title: "داشبورد",
-        link: "/admin/dashboard",
+        link: `${dir}/admin/dashboard`,
         fontAwesomeIcon: "fa-database",
       },
       {
         id: "2",
         title: "کاربران",
-        link: "/admin/users",
+        link: `${dir}/admin/users`,
         fontAwesomeIcon: "fa-users",
       },
       {
         id: "3",
         title: "دستگاه‌ها",
-        link: "/admin/devices",
+        link: `${dir}/admin/devices`,
         fontAwesomeIcon: "fa-hdd",
       },
       {
         id: "4",
         title: "خروج",
-        link: "/admin/logout",
+        link: `${dir}/admin/logout`,
         fontAwesomeIcon: "fa-sign-out-alt",
       },
     ],
@@ -58,42 +61,50 @@ class AdminPanel extends Component {
     const sidebarItems = this.state.sidebarItems;
 
     return (
-      <div className="panel-container">
-        <div className="container-fluid p-0 h-100 w-100 d-flex flex-row main-section">
-          <SidebarMenu items={sidebarItems} />
-          <main className="content">
-            <Switch>
-              <Route path="/admin/dashboard" component={Dashboard} />
-              <Route path="/admin/users" component={Users} />
-              <Route path="/admin/user/:username" component={User} />
-              <Route path="/admin/devices" component={Devices} />
-              <Route path="/admin/device/:deviceID" component={Device} />
-              <Route path="/admin/settings" component={Settings} />
-              <Route path="/admin/new-user" component={NewUser} />
-              <Route path="/admin/new-device" component={NewDevice} />
-              <Route path="/admin/logout" component={Logout} />
-              <Route
-                path="/admin/editNickname/:clientUsername"
-                component={EditNickname}
-              />
-              <Route
-                path="/admin/editPassword/:clientUsername"
-                component={EditPassword}
-              />
-              <Route path="/admin/not-found" component={NotFound} />
-              <Redirect from="/admin/" exact to="/admin/dashboard" />
-              <Redirect to="/admin/not-found" />
-            </Switch>
-          </main>
+      <div className="background">
+        <div className="panel-container">
+          <div className="container-fluid p-0 h-100 w-100 d-flex flex-row main-section">
+            <SidebarMenu items={sidebarItems} />
+            <main className="content">
+              <Switch>
+                <Route path={`${dir}/admin/dashboard`} component={Dashboard} />
+                <Route path={`${dir}/admin/users`} component={Users} />
+                <Route path={`${dir}/admin/user/:username`} component={User} />
+                <Route path={`${dir}/admin/devices`} component={Devices} />
+                <Route
+                  path={`${dir}/admin/device/:deviceID/:phoneNumber`}
+                  component={Device}
+                />
+                <Route path={`${dir}/admin/settings`} component={Settings} />
+                <Route path={`${dir}/admin/new-user`} component={NewUser} />
+                <Route path={`${dir}/admin/new-device`} component={NewDevice} />
+                <Route
+                  path={`${dir}/admin/device-assignment/:clientUsername`}
+                  component={DeviceAssignment}
+                />
+                <Route path={`${dir}/admin/logout`} component={Logout} />
+                <Route
+                  path={`${dir}/admin/editNickname/:clientUsername`}
+                  component={EditNickname}
+                />
+                <Route
+                  path={`${dir}/admin/editPassword/:clientUsername`}
+                  component={EditPassword}
+                />
+                <Route path={`${dir}/admin/not-found`} component={NotFound} />
+                <Redirect
+                  from={`${dir}/admin/`}
+                  exact
+                  to={`${dir}/admin/dashboard`}
+                />
+                {/* <Redirect to={`${dir}/admin/not-found`} /> */}
+              </Switch>
+            </main>
+          </div>
         </div>
       </div>
     );
   }
-
-  onExitClickHandler = () => {
-    let url = `/login`;
-    this.props.history.replace(url);
-  };
 }
 
 export default AdminPanel;

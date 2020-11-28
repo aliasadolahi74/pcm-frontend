@@ -10,6 +10,7 @@ import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "../services/authServices";
 import "../services/httpServices";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditNicknameForm extends Form {
   state = {
@@ -53,7 +54,7 @@ class EditNicknameForm extends Form {
     console.log(editNicknameResponse);
     const status = editNicknameResponse.data.status;
     if (status) {
-      window.location = "/admin/user/" + clientUsername;
+      window.location = `${dir}/admin/user/${clientUsername}`;
     } else {
       this.setState({
         dialogIsVisible: true,

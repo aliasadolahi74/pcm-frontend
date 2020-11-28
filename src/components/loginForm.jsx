@@ -8,6 +8,7 @@ import config from "../config.json";
 import qs from "qs";
 import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class LoginForm extends Form {
   state = {
@@ -42,10 +43,11 @@ class LoginForm extends Form {
     };
     const loginInfo = await axios(loginOptions);
     const status = loginInfo.data.status;
+    console.log(loginInfo);
     if (status) {
       const token = loginInfo.headers["x-auth-token"];
       localStorage.setItem("token", token);
-      window.location = "/admin/dashboard";
+      window.location = `${dir}/admin/dashboard`;
     } else {
       this.setState({
         dialogIsVisible: true,

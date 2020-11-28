@@ -6,16 +6,17 @@ import AdminPanel from "./components/adminPanel";
 import NotFound from "./components/notFound";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Login from "./components/login";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/admin" component={AdminPanel} />
-        <Route path="/not-found" component={NotFound} />
-        <Route path="/login" component={Login} />
-        <Redirect from="/" exact to="/admin" />
-        <Redirect to="/not-found" />
+        <Route path={`${dir}/admin`} component={AdminPanel} />
+        <Route path={`${dir}/not-found`} component={NotFound} />
+        <Route path={`${dir}/login`} component={Login} />
+        <Redirect from={`${dir}/`} exact to={`${dir}/login`} />
+        {/* <Redirect to={`${dir}/not-found`} /> */}
       </Switch>
     </div>
   );

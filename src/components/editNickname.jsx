@@ -3,6 +3,8 @@ import { authData } from "./../services/authServices";
 import "./../services/httpServices";
 import EditNicknameForm from "./editNicknameForm";
 
+const dir = process.env.REACT_APP_CUSTOM_DIR;
+
 class EditNickname extends Component {
   state = {
     clientUsername: this.props.match.params.clientUsername,
@@ -10,7 +12,7 @@ class EditNickname extends Component {
 
   componentDidMount() {
     if (!authData.isAdmin) {
-      this.props.history.replace("/admin/dashboard");
+      this.props.history.replace(`${dir}/admin/dashboard`);
     }
   }
 

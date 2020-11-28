@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import NewUserForm from "./newUserForm";
 
 class NewUser extends Component {
-  state = {};
   render() {
     return (
       <React.Fragment>

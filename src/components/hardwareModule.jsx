@@ -1,20 +1,24 @@
 import React from "react";
-import ToggleButton from "./common/toggleButton";
 
 const HardwareModule = (props) => {
-  const { hardwareModule, onToggleButtonClick } = props;
+  const { hardwareModule, onStartClick, onStopClick } = props;
 
   return (
-    <React.Fragment>
-      <span className="label">{hardwareModule.label}</span>
-      <ToggleButton
-        isActive={hardwareModule.isActive === "1"}
-        onToggleButtonClick={() => {
-          onToggleButtonClick(hardwareModule);
-        }}
-        name={hardwareModule.name}
-      />
-    </React.Fragment>
+    <div className="hardware-button-container mb-4">
+      <span className="label mb-2">{hardwareModule.label}</span>
+      <div>
+        <button
+          onClick={() => {
+            onStartClick(hardwareModule);
+            onStopClick(hardwareModule);
+          }}
+          className="btn btn-success ml-2"
+        >
+          روشن
+        </button>
+        <button className="btn btn-danger">خاموش</button>
+      </div>
+    </div>
   );
 };
 

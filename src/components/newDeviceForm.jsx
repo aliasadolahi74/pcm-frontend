@@ -2,11 +2,20 @@ import React from "react";
 import Joi from "joi";
 import Input from "./common/input";
 import Form from "./common/form";
+import qs from "qs";
+import axios from "axios";
+import config from "./../config.json";
+import { authData } from "./../services/authServices";
+import { getErrorString } from "./utils/error-converter";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class NewDeviceForm extends Form {
   state = {
-    data: { deviceID: "", deviceName: "" },
+    data: { deviceID: "", deviceName: "", phoneNumber: "" },
     errors: {},
+    hardwareList: [],
+    authData: { username: authData.username, token: authData.token },
+    checkedHardware: [],
   };
 
   schema = {
@@ -20,37 +29,122 @@ class NewDeviceForm extends Form {
       "string.min": "اندازه نام دستگاه باید حداقل ۵ کارکتر باشد",
       "string.max": "اندازه نام دستگاه باید حداکثر ۵۰ کارکتر باشد",
     }),
+    phoneNumber: Joi.string().length(11).required().messages({
+      "string.empty": "وارد کردن نام دستگاه الزامی است",
+      "string.length": "اندازه شماره سیم کارت باید ۱۱ رقم باشد",
+    }),
   };
 
-  doSubmit = () => {
-    console.log("submitted");
-    // call server
+  async componentDidMount() {
+    try {
+      const hardwareOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(this.state.authData),
+        url: `${config.apiBaseURL}/hardwareList.php`,
+      };
+      const hardwareListResponse = await axios(hardwareOptions);
+      const { data } = hardwareListResponse;
+      if (data.status) {
+        const hardwareList = data.body;
+        this.setState({ hardwareList });
+      } else {
+        alert(getErrorString(data.errors));
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+      console.log(ex);
+    }
+  }
+
+  handleCheckboxChange = (hardwareName) => {
+    const checkedHardwareCloned = [...this.state.checkedHardware];
+    const index = checkedHardwareCloned.indexOf(hardwareName);
+
+    if (checkedHardwareCloned[index] !== undefined) {
+      console.log(checkedHardwareCloned[hardwareName]);
+      const checkedHardware = checkedHardwareCloned.filter((value) => {
+        return value !== hardwareName;
+      });
+      this.setState({ checkedHardware });
+    } else {
+      checkedHardwareCloned.push(hardwareName);
+      this.setState({ checkedHardware: checkedHardwareCloned });
+    }
+  };
+
+  doSubmit = async () => {
+    const { checkedHardware, authData, data: deviceInfo } = this.state;
+    try {
+      const checkedHardwareString = checkedHardware.join(",");
+      const newDeviceOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify({
+          ...authData,
+          checkedHardware: checkedHardwareString,
+          ...deviceInfo,
+        }),
+        url: `${config.apiBaseURL}/newDevice.php`,
+      };
+      const newDeviceResponse = await axios(newDeviceOptions);
+      const { data } = newDeviceResponse;
+      console.log(newDeviceResponse);
+      if (data.status) {
+        window.location = `${dir}/admin/devices`;
+      } else {
+        alert(getErrorString(data.errors));
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+      console.log(ex);
+    }
   };
 
   render() {
-    const { data, errors } = this.state;
+    const { data, errors, hardwareList } = this.state;
     return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} className="d-flex flex-column px-4">
-          <div className="w-25">
-            <Input
-              autoFocus
-              name="deviceID"
-              type="text"
-              value={data.username}
-              onChange={this.handleChange}
-              label="شناسه دستگاه"
-              error={errors.username}
-            />
+          <div
+            className="w-75"
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+          >
+            <div className="w-75">
+              <Input
+                autoFocus
+                name="deviceID"
+                type="text"
+                value={data.username}
+                onChange={this.handleChange}
+                label="شناسه دستگاه"
+                error={errors.username}
+              />
 
-            <Input
-              name="deviceName"
-              type="text"
-              value={data.nikname}
-              onChange={this.handleChange}
-              label="نام دستگاه"
-              error={errors.nikname}
-            />
+              <Input
+                name="deviceName"
+                type="text"
+                value={data.nikname}
+                onChange={this.handleChange}
+                label="نام دستگاه"
+                error={errors.nikname}
+              />
+            </div>
+
+            <div className="w-75">
+              <Input
+                name="phoneNumber"
+                type="text"
+                value={data.phoneNumber}
+                onChange={this.handleChange}
+                label="شماره سیم کارت"
+                error={errors.phoneNumber}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -60,12 +154,17 @@ class NewDeviceForm extends Form {
             </span>
             <div className="checkbox-container d-flex flex-column">
               <div>
-                <label htmlFor="engine">موتور</label>
-                <input type="checkbox" name="engine" id="engine" />
-                <label htmlFor="security">دزدگیر</label>
-                <input type="checkbox" name="security" id="security" />
-                <label htmlFor="commandTimer">رله ساعت فرمان</label>
-                <input type="checkbox" name="commandTimer" id="commandTimer" />
+                {hardwareList.map((item) => (
+                  <React.Fragment key={item.name}>
+                    <label htmlFor={item.name}>{item.label}</label>
+                    <input
+                      onChange={() => this.handleCheckboxChange(item.name)}
+                      type="checkbox"
+                      name={item.name}
+                      id={item.name}
+                    />
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           </div>
