@@ -32,6 +32,7 @@ class User extends Component {
       url: `${config.apiBaseURL}/userInfo.php`,
     };
     const userInfoResponse = await axios(userInfoOptions);
+
     if (userInfoResponse.data.status) {
       const userInfo = userInfoResponse.data.body[0];
 
@@ -51,7 +52,7 @@ class User extends Component {
     const { devices: allDevices, currentPage, pageSize, userInfo } = this.state;
     const devices = paginate(allDevices, currentPage, pageSize);
     const username = this.props.match.params.username;
-    const { nickname, datetime } = userInfo;
+    const { nickname, datetime, isAdmin } = userInfo;
     return (
       <div>
         <h1>{nickname}</h1>
@@ -72,9 +73,14 @@ class User extends Component {
               </Link>
               <span>رمز عبور</span>
               <span>رمزنگاری شده</span>
-              <Link to={`${dir}/admin/editPassword/${username}`}>
-                <i className="fa fa-edit icon-btn"></i>
-              </Link>
+              {isAdmin ? (
+                <span></span>
+              ) : (
+                <Link to={`${dir}/admin/editPassword/${username}`}>
+                  <i className="fa fa-edit icon-btn"></i>
+                </Link>
+              )}
+
               <span>تاریخ ثبت‌نام</span>
               <span className="datetime">{datetime}</span>
             </div>

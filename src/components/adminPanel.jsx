@@ -15,6 +15,7 @@ import Logout from "./logout";
 import EditNickname from "./editNickname";
 import EditPassword from "./editPassword";
 import DeviceAssignment from "./device-assignment";
+import EditDevice from "./editDevice";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
@@ -72,6 +73,10 @@ class AdminPanel extends Component {
                 <Route path={`${dir}/admin/user/:username`} component={User} />
                 <Route path={`${dir}/admin/devices`} component={Devices} />
                 <Route
+                  path={`${dir}/admin/edit-device/:deviceID`}
+                  component={EditDevice}
+                />
+                <Route
                   path={`${dir}/admin/device/:deviceID/:phoneNumber`}
                   component={Device}
                 />
@@ -97,7 +102,7 @@ class AdminPanel extends Component {
                   exact
                   to={`${dir}/admin/dashboard`}
                 />
-                {/* <Redirect to={`${dir}/admin/not-found`} /> */}
+                <Redirect to={`${dir}/admin/not-found`} />
               </Switch>
             </main>
           </div>

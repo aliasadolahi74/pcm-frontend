@@ -10,13 +10,15 @@ import qs from "qs";
 import "../services/httpServices";
 import { authData } from "./../services/authServices";
 import { getErrorString } from "./utils/error-converter";
-
+import AlertDialog from "./alertDialog";
 class Devices extends Component {
   state = {
     allDevices: [],
     currentPage: 1,
     pageSize: 10,
     authData: { username: authData.username, token: authData.token },
+    isAlertDialogOpen: false,
+    selectedDeleteButton: {},
   };
 
   async componentDidMount() {
@@ -42,6 +44,58 @@ class Devices extends Component {
   };
 
   onDeviceDelete = async (item) => {
+    this.setState({ isAlertDialogOpen: true, selectedDeleteButton: item });
+  };
+
+  render() {
+    const {
+      allDevices,
+      currentPage,
+      pageSize,
+      isAlertDialogOpen,
+      selectedDeleteButton,
+    } = this.state;
+    const devices = paginate(allDevices, currentPage, pageSize);
+    return (
+      <React.Fragment>
+        <section className="mb-2">
+          <div className="section-header">
+            <h1 className="section-title">دستگاه‌ها</h1>
+            <div className="button-container">
+              {authData.isAdmin ? (
+                <Link className="btn btn-success" to="./new-device">
+                  <i className="fa fa-plus"></i>
+                </Link>
+              ) : null}
+            </div>
+          </div>
+        </section>
+        <DeviceTable
+          onDeleteDeviceButtonClick={this.onDeviceDelete}
+          devices={devices}
+        />
+        <Pagination
+          itemsCount={allDevices.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
+        <AlertDialog
+          open={isAlertDialogOpen}
+          onClose={this.handleAlertDialogClose}
+          title="حذف دستگاه"
+          message="آیا میخواهید این دستگاه را حذف کنید؟"
+          onYesClick={() => this.handleYesClick(selectedDeleteButton)}
+        />
+      </React.Fragment>
+    );
+  }
+
+  handleAlertDialogClose = () => {
+    this.setState({ isAlertDialogOpen: false });
+  };
+
+  handleYesClick = async (item) => {
     try {
       const devicesOptions = {
         method: "POST",
@@ -65,35 +119,9 @@ class Devices extends Component {
         alert("Bad Request");
       }
     }
-  };
 
-  render() {
-    const { allDevices, currentPage, pageSize } = this.state;
-    const devices = paginate(allDevices, currentPage, pageSize);
-    return (
-      <React.Fragment>
-        <section className="mb-2">
-          <div className="section-header">
-            <h1 className="section-title">دستگاه‌ها</h1>
-            <div className="button-container">
-              {authData.isAdmin ? (
-                <Link className="btn btn-success" to="./new-device">
-                  <i className="fa fa-plus"></i>
-                </Link>
-              ) : null}
-            </div>
-          </div>
-        </section>
-        <DeviceTable onDeviceDelete={this.onDeviceDelete} devices={devices} />
-        <Pagination
-          itemsCount={allDevices.length}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-        />
-      </React.Fragment>
-    );
-  }
+    this.setState({ isAlertDialogOpen: false });
+  };
 }
 
 export default Devices;

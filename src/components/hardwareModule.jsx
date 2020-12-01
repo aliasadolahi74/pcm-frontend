@@ -10,13 +10,19 @@ const HardwareModule = (props) => {
         <button
           onClick={() => {
             onStartClick(hardwareModule);
-            onStopClick(hardwareModule);
           }}
           className="btn btn-success ml-2"
         >
-          روشن
+          {hardwareModule["on_text"]}
         </button>
-        <button className="btn btn-danger">خاموش</button>
+        <button
+          onClick={() => {
+            onStopClick(hardwareModule);
+          }}
+          className="btn btn-danger"
+        >
+          {hardwareModule["off_text"]}
+        </button>
       </div>
     </div>
   );

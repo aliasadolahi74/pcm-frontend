@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "./common/table";
+import { authData } from "./../services/authServices";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class UserTable extends Component {
@@ -9,7 +10,19 @@ class UserTable extends Component {
       { name: "nickname", label: "نام" },
       { name: "username", label: "نام کاربری" },
       { name: "datetime", label: "تاریخ ثبت‌نام" },
-      { name: "status", label: "وضعیت" },
+      {
+        name: "deleteBtn",
+        content: (item) => (
+          <button
+            className="btn btn-outline-danger"
+            onClick={() => {
+              this.handleDelete(item);
+            }}
+          >
+            <i className="fa fa-trash mr-1"></i>
+          </button>
+        ),
+      },
       {
         name: "detailsButton",
         content: (item) => (
@@ -21,6 +34,20 @@ class UserTable extends Component {
       },
     ],
   };
+
+  componentDidMount() {
+    if (!authData.isAdmin) {
+      const columns = this.state.columns.filter(
+        (item) => item.name !== "deleteBtn"
+      );
+      this.setState({ columns });
+    }
+  }
+
+  handleDelete = (item) => {
+    this.props.onDeleteDeviceButtonClick(item);
+  };
+
   render() {
     const { columns } = this.state;
     const { users } = this.props;

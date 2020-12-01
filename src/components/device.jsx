@@ -6,13 +6,20 @@ import "../services/httpServices";
 import config from "../config.json";
 import { authData } from "./../services/authServices";
 import ReportTable from "./reportTable";
-
+import { paginate } from "./utils/paginate";
+import Pagination from "./common/pagination";
+import { DatePicker } from "jalali-react-datepicker";
+import { filterDatetime } from "./utils/filter";
 class Device extends Component {
   state = {
     hardwareModules: [],
     phoneNumber: this.props.match.params.phoneNumber,
     columns: [],
-    reportData: [],
+    allReportData: [],
+    currentPage: 1,
+    pageSize: 5,
+    filterStartDate: "",
+    filterEndDate: "",
   };
 
   async componentDidMount() {
@@ -27,7 +34,6 @@ class Device extends Component {
     };
 
     const hardwareListResponse = await axios(deviceHardwareOptions);
-
     const hardwareModules = hardwareListResponse.data.body;
     hardwareModules.map((item, index) =>
       hardwareModules[index].isActive === "1"
@@ -36,6 +42,21 @@ class Device extends Component {
     );
 
     this.setState({ hardwareModules });
+
+    const deviceInfoOption = {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      data: qs.stringify({
+        deviceID: this.props.match.params.deviceID,
+        ...authData,
+      }),
+      url: `${config.apiBaseURL}/deviceInfo.php`,
+    };
+
+    const { data } = await axios(deviceInfoOption);
+    if (data.status) {
+      this.setState({ deviceName: data.body.deviceName });
+    }
 
     const deviceReportOptions = {
       method: "POST",
@@ -48,12 +69,14 @@ class Device extends Component {
     };
 
     const deviceReportResponse = await axios(deviceReportOptions);
-    const deviceReportArray = deviceReportResponse.data.body;
-    if (deviceReportArray.length > 0) {
-      this.updateColumnsFromReport(deviceReportArray[0]);
-      this.updateDataFromReport(deviceReportArray);
+    if (deviceReportResponse.data.status) {
+      const deviceReportArray = deviceReportResponse.data.body;
+      if (deviceReportArray.length > 0) {
+        const columns = this.updateColumnsFromReport(deviceReportArray[0]);
+        const reportData = this.updateDataFromReport(deviceReportArray);
+        this.setState({ columns, allReportData: reportData });
+      }
     }
-    // const availableHardwareList = hardwareListResponse.data.body.hardwareList;
   }
 
   updateColumnsFromReport = ({ report }) => {
@@ -62,12 +85,12 @@ class Device extends Component {
       return { name: item.name, label: item.label };
     });
     columns.push({ name: "datetime", label: "زمان" });
-    this.setState({ columns });
+    return columns;
   };
 
   updateDataFromReport = (reportArray) => {
     const reportData = [];
-    reportArray.forEach((item) => {
+    for (const item of reportArray) {
       const reportItem = JSON.parse(item.report);
       const reportItemData = {};
       reportItem.forEach((reportItem) => {
@@ -76,26 +99,50 @@ class Device extends Component {
         reportItemData["datetime"] = item.datetime;
       });
       reportData.push(reportItemData);
-    });
-    this.setState({ reportData });
+    }
+    return reportData;
   };
 
   render() {
     const deviceID = this.props.match.params.deviceID;
 
-    const { hardwareModules } = this.state;
+    const {
+      hardwareModules,
+      allReportData,
+      columns,
+      pageSize,
+      currentPage,
+      filterStartDate,
+      filterEndDate,
+      deviceName,
+    } = this.state;
+
+    let conditionedData = {};
+    if (filterStartDate !== "" && filterEndDate !== "") {
+      conditionedData = filterDatetime(
+        filterStartDate,
+        filterEndDate,
+        allReportData
+      );
+    } else {
+      conditionedData = allReportData;
+    }
+    const reportData = paginate(conditionedData, currentPage, pageSize);
     return (
       <div className="device-info-container">
-        <h1 className="mb-5">{deviceID}</h1>
+        <h1>{deviceName}</h1>
+        <h6 className="mt-3 mb-5">{deviceID}</h6>
         <div className="button-container">
-          {hardwareModules.map((item) => (
-            <HardwareModule
-              onStartClick={this.handleStartButtonClick}
-              onStopClick={this.handleStopButtonClick}
-              key={item.name}
-              hardwareModule={item}
-            />
-          ))}
+          {hardwareModules.map((item) => {
+            return (
+              <HardwareModule
+                onStartClick={this.handleStartButtonClick}
+                onStopClick={this.handleStopButtonClick}
+                key={item.name}
+                hardwareModule={item}
+              />
+            );
+          })}
         </div>
         <div className="mb-5">
           <button
@@ -103,7 +150,7 @@ class Device extends Component {
             onClick={this.handleLockButtonClick}
             className="btn btn-outline-primary mt-4"
           >
-            <i className="fas fa-lock"></i>&nbsp; قفل برقی
+            <i className="fas fa-lock"></i>&nbsp; فرمان تحریک قفل برقی
           </button>
           <button
             id=""
@@ -111,7 +158,7 @@ class Device extends Component {
             onClick={this.handleReportingButtonClick}
             className="btn btn-outline-primary mt-4 mr-2 "
           >
-            <i className="fas fa-sync"></i>&nbsp; گزارش گیری
+            <i className="fas fa-sync"></i>&nbsp; درخواست گزارش لحظه‌ای
           </button>
         </div>
 
@@ -122,17 +169,51 @@ class Device extends Component {
               className="icon-btn fa fa-file-excel"
             ></i>
             <i className="icon-btn fa fa-print"></i>
+            <DatePicker
+              onClickSubmitButton={this.handleOnStartDateClick}
+              label="از تاریخ: "
+              timePicker={false}
+            />
+            <DatePicker
+              onClickSubmitButton={this.handleOnEndDateClick}
+              label="تا تاریخ: "
+              timePicker={false}
+            />
+            <button
+              className="btn btn-sm btn-secondary"
+              onClick={this.resetFilters}
+            >
+              حذف فیلتر
+            </button>
           </div>
           <div className="report-content">
-            <ReportTable
-              columns={this.state.columns}
-              data={this.state.reportData}
+            <ReportTable columns={columns} data={reportData} />
+            <Pagination
+              itemsCount={conditionedData.length}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
             />
           </div>
         </div>
       </div>
     );
   }
+
+  resetFilters = () => {
+    this.setState({ filterStartDate: "", filterEndDate: "", currentPage: 1 });
+  };
+
+  handleOnStartDateClick = ({ value }) => {
+    this.setState({ filterStartDate: value["_i"] });
+  };
+  handleOnEndDateClick = ({ value }) => {
+    this.setState({ filterEndDate: value["_i"] });
+  };
+
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
+  };
 
   handleExcelButtonClick = async () => {
     const deviceID = this.props.match.params.deviceID;
@@ -215,9 +296,7 @@ class Device extends Component {
   };
 
   handleStopButtonClick = async (item) => {
-    console.log(item);
     const textSMS = item["sms_text_off"];
-
     const options = {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },

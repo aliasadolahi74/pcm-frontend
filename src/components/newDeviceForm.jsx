@@ -119,19 +119,19 @@ class NewDeviceForm extends Form {
                 autoFocus
                 name="deviceID"
                 type="text"
-                value={data.username}
+                value={data.deviceID}
                 onChange={this.handleChange}
                 label="شناسه دستگاه"
-                error={errors.username}
+                error={errors.deviceID}
               />
 
               <Input
                 name="deviceName"
                 type="text"
-                value={data.nikname}
+                value={data.deviceName}
                 onChange={this.handleChange}
                 label="نام دستگاه"
-                error={errors.nikname}
+                error={errors.deviceName}
               />
             </div>
 

@@ -10,6 +10,7 @@ class DeviceTable extends Component {
     columns: [
       { name: "deviceID", label: "شناسه دستگاه" },
       { name: "deviceName", label: "نام دستگاه" },
+      { name: "phoneNumber", label: "شماره سیمکارت" },
       { name: "nickname", label: "نام مشتری" },
       {
         name: "deleteBtn",
@@ -22,6 +23,14 @@ class DeviceTable extends Component {
           >
             <i className="fa fa-trash mr-1"></i>
           </button>
+        ),
+      },
+      {
+        name: "editButton",
+        content: (item) => (
+          <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
+            <i className="fa fa-edit mr-1"></i>
+          </Link>
         ),
       },
       {
@@ -46,7 +55,7 @@ class DeviceTable extends Component {
   }
 
   handleDelete = (item) => {
-    this.props.onDeviceDelete(item);
+    this.props.onDeleteDeviceButtonClick(item);
   };
 
   render() {

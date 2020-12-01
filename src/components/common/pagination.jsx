@@ -7,8 +7,6 @@ class Pagination extends Component {
 
     const numberOfPages = this.getNumberOfPages(itemsCount);
 
-    console.log();
-
     return (
       <nav
         aria-label="Page navigation"
@@ -23,7 +21,8 @@ class Pagination extends Component {
                     "page-item " + (currentPage === page ? "active" : "")
                   }
                   key={page}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     onPageChange(page);
                   }}
                 >
