@@ -10,6 +10,9 @@ import { paginate } from "./utils/paginate";
 import Pagination from "./common/pagination";
 import { DatePicker } from "jalali-react-datepicker";
 import { filterDatetime } from "./utils/filter";
+import { Link } from "react-router-dom";
+const dir = process.env.REACT_APP_CUSTOM_DIR;
+
 class Device extends Component {
   state = {
     hardwareModules: [],
@@ -69,6 +72,7 @@ class Device extends Component {
     };
 
     const deviceReportResponse = await axios(deviceReportOptions);
+    console.log(deviceReportResponse);
     if (deviceReportResponse.data.status) {
       const deviceReportArray = deviceReportResponse.data.body;
       if (deviceReportArray.length > 0) {
@@ -164,11 +168,17 @@ class Device extends Component {
 
         <div className="report-container">
           <div className="report-header">
-            <i
-              onClick={this.handleExcelButtonClick}
+            <Link
+              to={`${dir}/admin/report/${deviceID}`}
               className="icon-btn fa fa-file-excel"
-            ></i>
-            <i className="icon-btn fa fa-print"></i>
+            />
+            <a
+              href={`${config.apiBaseURL}/print-report.php?token=${authData.token}&deviceID=${deviceID}&username=${authData.username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="icon-btn fa fa-print"></i>
+            </a>
             <DatePicker
               onClickSubmitButton={this.handleOnStartDateClick}
               label="از تاریخ: "
@@ -213,27 +223,6 @@ class Device extends Component {
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
-  };
-
-  handleExcelButtonClick = async () => {
-    const deviceID = this.props.match.params.deviceID;
-    const downloadOptions = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({
-        deviceID: deviceID,
-        ...authData,
-      }),
-      url: `${config.apiBaseURL}/download-report.php`,
-    };
-
-    const downloadResponse = await axios(downloadOptions);
-    if (downloadResponse.data.status) {
-      const downloadToken = downloadResponse.data.body["download-token"];
-      window.open(
-        `${config.apiBaseURL}/download.php?token=${downloadToken}&deviceID=${deviceID}`
-      );
-    }
   };
 
   handleOnDialogEnds = () => {

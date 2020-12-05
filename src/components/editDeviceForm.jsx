@@ -7,9 +7,10 @@ import axios from "axios";
 import config from "./../config.json";
 import { authData } from "./../services/authServices";
 import { getErrorString } from "./utils/error-converter";
+import { withRouter } from "react-router-dom";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
-class NewDeviceForm extends Form {
+class EditDeviceForm extends Form {
   state = {
     data: { deviceID: "", deviceName: "", phoneNumber: "" },
     errors: {},
@@ -57,6 +58,39 @@ class NewDeviceForm extends Form {
       }
       console.log(ex);
     }
+
+    try {
+      const deviceDetailsOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify({
+          ...this.state.authData,
+          deviceID: this.props.match.params.deviceID,
+        }),
+        url: `${config.apiBaseURL}/getDeviceDetails.php`,
+      };
+      const deviceDetailsResponse = await axios(deviceDetailsOptions);
+      const { data: receivedData } = deviceDetailsResponse;
+      if (receivedData.status) {
+        const details = receivedData.body;
+        const { deviceID, deviceName, phoneNumber } = details.deviceInfo;
+        const checkedHardware = details.hardwareName.split(",");
+        console.log(checkedHardware);
+        const data = {
+          deviceID: deviceID,
+          deviceName: deviceName,
+          phoneNumber: phoneNumber,
+        };
+        this.setState({ checkedHardware, data });
+      } else {
+        alert(getErrorString(receivedData.errors));
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+      console.log(ex);
+    }
   }
 
   handleCheckboxChange = (hardwareName) => {
@@ -87,7 +121,7 @@ class NewDeviceForm extends Form {
           checkedHardware: checkedHardwareString,
           ...deviceInfo,
         }),
-        url: `${config.apiBaseURL}/newDevice.php`,
+        url: `${config.apiBaseURL}/updateDevice.php`,
       };
       const newDeviceResponse = await axios(newDeviceOptions);
       const { data } = newDeviceResponse;
@@ -106,7 +140,7 @@ class NewDeviceForm extends Form {
   };
 
   render() {
-    const { data, errors, hardwareList } = this.state;
+    const { data, errors, hardwareList, checkedHardware } = this.state;
     return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} className="d-flex flex-column px-4">
@@ -114,16 +148,6 @@ class NewDeviceForm extends Form {
             className="w-75"
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
           >
-            <Input
-              autoFocus
-              name="deviceID"
-              type="text"
-              value={data.deviceID}
-              onChange={this.handleChange}
-              label="شناسه دستگاه"
-              error={errors.deviceID}
-            />
-
             <div className="w-75">
               <Input
                 name="deviceName"
@@ -154,17 +178,21 @@ class NewDeviceForm extends Form {
             </span>
             <div className="checkbox-container d-flex flex-column">
               <div>
-                {hardwareList.map((item) => (
-                  <React.Fragment key={item.name}>
-                    <label htmlFor={item.name}>{item.label}</label>
-                    <input
-                      onChange={() => this.handleCheckboxChange(item.name)}
-                      type="checkbox"
-                      name={item.name}
-                      id={item.name}
-                    />
-                  </React.Fragment>
-                ))}
+                {hardwareList.map((item) => {
+                  const isChecked = checkedHardware.includes(item.name);
+                  return (
+                    <React.Fragment key={item.name}>
+                      <label htmlFor={item.name}>{item.label}</label>
+                      <input
+                        onChange={() => this.handleCheckboxChange(item.name)}
+                        type="checkbox"
+                        checked={isChecked}
+                        name={item.name}
+                        id={item.name}
+                      />
+                    </React.Fragment>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -175,7 +203,7 @@ class NewDeviceForm extends Form {
             onClick={this.handleSubmitButton}
             className="btn btn-primary mt-2 w-25"
           >
-            ویرایش دستگاه
+            ویرایش اطلاعات
           </button>
         </form>
       </React.Fragment>
@@ -183,4 +211,4 @@ class NewDeviceForm extends Form {
   }
 }
 
-export default NewDeviceForm;
+export default withRouter(EditDeviceForm);

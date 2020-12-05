@@ -31,6 +31,7 @@ class Devices extends Component {
       };
       const devicesInfo = await axios(devicesOptions);
       const allDevices = devicesInfo.data.body;
+      console.log(devicesInfo);
       this.setState({ allDevices });
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {

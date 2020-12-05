@@ -16,6 +16,8 @@ import EditNickname from "./editNickname";
 import EditPassword from "./editPassword";
 import DeviceAssignment from "./device-assignment";
 import EditDevice from "./editDevice";
+import Support from "./support";
+import Report from "./report";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
@@ -42,6 +44,12 @@ class AdminPanel extends Component {
       },
       {
         id: "4",
+        title: "پشتیبانی",
+        link: `${dir}/admin/support`,
+        fontAwesomeIcon: "fa-headset",
+      },
+      {
+        id: "5",
         title: "خروج",
         link: `${dir}/admin/logout`,
         fontAwesomeIcon: "fa-sign-out-alt",
@@ -77,11 +85,16 @@ class AdminPanel extends Component {
                   component={EditDevice}
                 />
                 <Route
+                  path={`${dir}/admin/report/:deviceID`}
+                  component={Report}
+                />
+                <Route
                   path={`${dir}/admin/device/:deviceID/:phoneNumber`}
                   component={Device}
                 />
                 <Route path={`${dir}/admin/settings`} component={Settings} />
                 <Route path={`${dir}/admin/new-user`} component={NewUser} />
+                <Route path={`${dir}/admin/support`} component={Support} />
                 <Route path={`${dir}/admin/new-device`} component={NewDevice} />
                 <Route
                   path={`${dir}/admin/device-assignment/:clientUsername`}

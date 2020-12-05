@@ -7,6 +7,7 @@ import NotFound from "./components/notFound";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Login from "./components/login";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
+import { MetaTags } from "react-meta-tags";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
 
   return (
     <MuiThemeProvider theme={theme}>
+      <MetaTags>
+        <meta name="viewport" content="width=1300" />
+      </MetaTags>
       <div className="App">
         <Switch>
           <Route path={`${dir}/admin`} component={AdminPanel} />

@@ -20,7 +20,10 @@ class Login extends Component {
                 <LoginForm />
               </div>
               <div className="d-flex w-100 flex-column align-items-center justify-content-center about-us-container">
-                <div className="content p-5 w-75 h-100 d-flex justify-content-center">
+                <div className="content p-5 w-100 h-100 d-flex justify-content-center">
+                  <h3 className="mb-4">
+                    سامانه تله‌متری شرکت طراحان مدار باختر
+                  </h3>
                   <p className="about-us-text">
                     شرکت طراحان مدار باختر در سال ۱۳۹۴ با هدف تولید و بروزآوری
                     محصولات مورد نیاز صنایع «در حوزه‌های برق، الکترونیک،

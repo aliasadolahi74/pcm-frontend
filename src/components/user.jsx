@@ -9,6 +9,7 @@ import "../services/httpServices";
 import { Link } from "react-router-dom";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "./../services/authServices";
+import AlertDialog from "./alertDialog";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class User extends Component {
@@ -17,6 +18,8 @@ class User extends Component {
     devices: [],
     currentPage: 1,
     pageSize: 5,
+    isAlertDialogOpen: false,
+    selectedDeleteButton: {},
     authData: { username: authData.username, token: authData.token },
   };
 
@@ -49,7 +52,14 @@ class User extends Component {
   }
 
   render() {
-    const { devices: allDevices, currentPage, pageSize, userInfo } = this.state;
+    const {
+      devices: allDevices,
+      currentPage,
+      pageSize,
+      userInfo,
+      isAlertDialogOpen,
+      selectedDeleteButton,
+    } = this.state;
     const devices = paginate(allDevices, currentPage, pageSize);
     const username = this.props.match.params.username;
     const { nickname, datetime, isAdmin } = userInfo;
@@ -73,7 +83,7 @@ class User extends Component {
               </Link>
               <span>رمز عبور</span>
               <span>رمزنگاری شده</span>
-              {isAdmin ? (
+              {isAdmin === "1" ? (
                 <span></span>
               ) : (
                 <Link to={`${dir}/admin/editPassword/${username}`}>
@@ -108,12 +118,31 @@ class User extends Component {
               />
             </div>
           </section>
+          <AlertDialog
+            open={isAlertDialogOpen}
+            onClose={this.handleAlertDialogClose}
+            title="قطع دسترسی به دستگاه"
+            message="آیا میخواهید دسترسی کاربر به دستگاه مورد نظر را قطع کنید؟"
+            onYesClick={() => this.handleYesClick(selectedDeleteButton)}
+          />
         </div>
       </div>
     );
   }
 
   handleDelete = async (item) => {
+    this.setState({ isAlertDialogOpen: true, selectedDeleteButton: item });
+  };
+
+  onUserDelete = async (item) => {
+    this.setState({ isAlertDialogOpen: true, selectedDeleteButton: item });
+  };
+
+  handleAlertDialogClose = () => {
+    this.setState({ isAlertDialogOpen: false });
+  };
+
+  handleYesClick = async (item) => {
     const { authData } = this.state;
     try {
       const options = {
@@ -140,6 +169,7 @@ class User extends Component {
         alert("Bad Request");
       }
     }
+    this.setState({ isAlertDialogOpen: false });
   };
 
   handleEditDeviceNameClick = (item) => {

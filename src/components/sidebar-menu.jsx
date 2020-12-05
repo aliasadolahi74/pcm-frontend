@@ -5,11 +5,13 @@ import { NavLink } from "react-router-dom";
 class SidebarMenu extends Component {
   render() {
     const { items } = this.props;
-
+    const websiteURL = process.env.WEBSITE;
     return (
       <aside className="sidebar">
         <div className="title">
-          <img src={icon} alt="logo" />
+          <a href={websiteURL}>
+            <img src={icon} alt="logo" />
+          </a>
         </div>
         <nav className="menu">
           <ul>
