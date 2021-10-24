@@ -38,12 +38,12 @@ const itemValue = {
     { key: "1", value: "تحریک شده" },
   ],
   pump: [
-    { key: "0", value: "قطع" },
-    { key: "1", value: "وصل" },
+    { key: "0", value: "خاموش" },
+    { key: "1", value: "روشن" },
   ],
   engine: [
-    { key: "0", value: "قطع" },
-    { key: "1", value: "وصل" },
+    { key: "0", value: "خاموش" },
+    { key: "1", value: "روشن" },
   ],
   faze1: [
     { key: "0", value: "قطع" },
@@ -90,7 +90,6 @@ const itemValue = {
 
 export function analyze(array) {
   const result = [];
-  console.log(array);
   for (let i = 0; i < array.length; i++) {
     const item = array[i];
     const date = new Date(Date.parse(item.datetime));

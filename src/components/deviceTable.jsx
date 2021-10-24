@@ -12,6 +12,7 @@ class DeviceTable extends Component {
       { name: "deviceName", label: "نام دستگاه" },
       { name: "phoneNumber", label: "شماره سیمکارت" },
       { name: "nickname", label: "نام مشتری" },
+      { name: "address", label: "محل نصب" },
       {
         name: "deleteBtn",
         content: (item) => (
@@ -27,11 +28,17 @@ class DeviceTable extends Component {
       },
       {
         name: "editButton",
-        content: (item) => (
-          <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
-            <i className="fa fa-edit mr-1"></i>
-          </Link>
-        ),
+        content: (item) => {
+          if (authData.isAdmin) {
+            return (
+              <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
+                <i className="fa fa-edit mr-1"></i>
+              </Link>
+            );
+          } else {
+            return null;
+          }
+        },
       },
       {
         name: "detailsButton",

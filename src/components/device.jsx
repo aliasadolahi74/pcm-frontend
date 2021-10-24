@@ -4,6 +4,7 @@ import axios from "axios";
 import qs from "qs";
 import "../services/httpServices";
 import config from "../config.json";
+import { getErrorString } from "./utils/error-converter";
 import { authData } from "./../services/authServices";
 import ReportTable from "./reportTable";
 import { paginate } from "./utils/paginate";
@@ -150,13 +151,6 @@ class Device extends Component {
         </div>
         <div className="mb-5">
           <button
-            type="button"
-            onClick={this.handleLockButtonClick}
-            className="btn btn-outline-primary mt-4"
-          >
-            <i className="fas fa-lock"></i>&nbsp; فرمان تحریک قفل برقی
-          </button>
-          <button
             id=""
             type="button"
             onClick={this.handleReportingButtonClick}
@@ -172,13 +166,9 @@ class Device extends Component {
               to={`${dir}/admin/report/${deviceID}`}
               className="icon-btn fa fa-file-excel"
             />
-            <a
-              href={`${config.apiBaseURL}/print-report.php?token=${authData.token}&deviceID=${deviceID}&username=${authData.username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link to={`${dir}/admin/print/${deviceID}`}>
               <i className="icon-btn fa fa-print"></i>
-            </a>
+            </Link>
             <DatePicker
               onClickSubmitButton={this.handleOnStartDateClick}
               label="از تاریخ: "
@@ -194,6 +184,13 @@ class Device extends Component {
               onClick={this.resetFilters}
             >
               حذف فیلتر
+            </button>
+
+            <button
+              className="btn btn-sm btn-primary mr-2"
+              onClick={this.handleSyncButton}
+            >
+              <i className="fa fa-sync"></i> ‌ همگام‌سازی اطلاعات
             </button>
           </div>
           <div className="report-content">
@@ -229,63 +226,23 @@ class Device extends Component {
     this.setState({ dialogIsVisible: false });
   };
 
-  handleLockButtonClick = async () => {
-    const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({
-        ...authData,
-        devicePhoneNumber: this.state.phoneNumber,
-        command: "DOOR",
-      }),
-      url: `${config.apiBaseURL}/command.php`,
-    };
-
-    const response = await axios(options);
-    if (response.data === 1) {
-      alert("دستور ارسال شد");
-    }
-  };
-
   handleReportingButtonClick = async () => {
-    const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({
-        ...authData,
-        devicePhoneNumber: this.state.phoneNumber,
-        command: "G",
-      }),
-      url: `${config.apiBaseURL}/command.php`,
-    };
-
-    const response = await axios(options);
-    if (response.data === 1) {
-      alert("دستور ارسال شد");
-    }
+    this.sendTextMessage("G");
   };
 
   handleStartButtonClick = async (item) => {
-    const textSMS = item["sms_text_on"];
-    const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({
-        ...authData,
-        devicePhoneNumber: this.state.phoneNumber,
-        command: textSMS,
-      }),
-      url: `${config.apiBaseURL}/command.php`,
-    };
-
-    const response = await axios(options);
-    if (response.data === 1) {
-      alert("دستور ارسال شد");
-    }
+    this.sendTextMessage(item["sms_text_on"]);
   };
 
   handleStopButtonClick = async (item) => {
-    const textSMS = item["sms_text_off"];
+    this.sendTextMessage(item["sms_text_off"]);
+  };
+
+  handleSyncButton = () => {
+    window.location.reload();
+  };
+
+  sendTextMessage = async (textSMS) => {
     const options = {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -298,8 +255,11 @@ class Device extends Component {
     };
 
     const response = await axios(options);
-    if (response.data === 1) {
+    console.log(response);
+    if (response.data.status) {
       alert("دستور ارسال شد");
+    } else {
+      alert(getErrorString(response.data.errors));
     }
   };
 }

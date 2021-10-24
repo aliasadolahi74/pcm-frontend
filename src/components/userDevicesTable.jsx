@@ -17,7 +17,7 @@ class UserDevicesTable extends Component {
             }}
             className="btn btn-outline-danger"
           >
-            <i className="fa fa-trash"></i>
+            <i className="fa fa-times"></i>‌ ‌ قطع ارتباط‌‌
           </button>
         ),
       },

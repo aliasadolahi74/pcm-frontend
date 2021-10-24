@@ -37,7 +37,9 @@ class LoginForm extends Form {
 
     const loginOptions = {
       method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
       data: qs.stringify(this.state.data),
       url: `${config.apiBaseURL}/login.php`,
     };
@@ -45,9 +47,9 @@ class LoginForm extends Form {
     const status = loginInfo.data.status;
     console.log(loginInfo);
     if (status) {
-      const token = loginInfo.headers["x-auth-token"];
+      const token = loginInfo.data.body.token;
       localStorage.setItem("token", token);
-      window.location = `${dir}/admin/dashboard`;
+      window.location = `${dir}/Admin`;
     } else {
       this.setState({
         dialogIsVisible: true,
@@ -58,49 +60,44 @@ class LoginForm extends Form {
   };
 
   render() {
-    const {
-      data,
-      errors,
-      dialogIsVisible,
-      dialogMessage,
-      dialogSuccess,
-    } = this.state;
+    const { data, errors, dialogIsVisible, dialogMessage, dialogSuccess } =
+      this.state;
     return (
       <React.Fragment>
         <form
           onSubmit={this.handleSubmit}
-          className="d-flex align-items-center justify-content-center flex-column w-75 px-4"
+          className='d-flex align-items-center justify-content-center flex-column w-75 px-4'
         >
           <Input
             autoFocus
-            name="username"
-            type="text"
+            name='username'
+            type='text'
             value={data.username}
             onChange={this.handleChange}
-            className="w-100"
-            label="نام کاربری"
+            className='w-100'
+            label='نام کاربری'
             error={errors.username}
           />
           <Input
-            name="password"
-            type="password"
+            name='password'
+            type='password'
             value={data.password}
             onChange={this.handleChange}
-            className="w-100"
-            label="رمز عبور"
+            className='w-100'
+            label='رمز عبور'
             error={errors.password}
           />
           <button
-            type="submit"
+            type='submit'
             disabled={this.validate()}
             onClick={this.handleSubmitButton}
-            className="btn btn-success w-100 mt-2"
+            className='btn btn-success w-100 mt-2'
           >
             ورود
           </button>
         </form>
         <Dialog
-          id="dialog"
+          id='dialog'
           isVisible={dialogIsVisible}
           onDialogEnds={this.handleOnDialogEnds}
           message={dialogMessage}

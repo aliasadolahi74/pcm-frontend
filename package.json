@@ -2,7 +2,8 @@
   "name": "pcm-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://vidapro.ir/pcm",
+  "homepage": "http://cloud.tmb.co.ir:8080",
+  "proxy": "http://cloud.tmb.co.ir:8080",
   "dependencies": {
     "@material-ui/core": "^4.11.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -19,7 +20,6 @@
     "query-string": "^6.13.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-meta-tags": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
   },

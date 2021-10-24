@@ -11,7 +11,7 @@ const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class NewDeviceForm extends Form {
   state = {
-    data: { deviceID: "", deviceName: "", phoneNumber: "" },
+    data: { deviceID: "", deviceName: "", phoneNumber: "", address: "" },
     errors: {},
     hardwareList: [],
     authData: { username: authData.username, token: authData.token },
@@ -33,6 +33,13 @@ class NewDeviceForm extends Form {
       "string.empty": "وارد کردن نام دستگاه الزامی است",
       "string.length": "اندازه شماره سیم کارت باید ۱۱ رقم باشد",
     }),
+    address: Joi.string()
+      .regex(/^[، آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+\d]+$/s)
+      .allow("", null)
+      .messages({
+        "string.pattern.base":
+          "محل نصب باید فارسی باشد. استفاده از کارکترهایی بجز - و ، غیرمجاز است",
+      }),
   };
 
   async componentDidMount() {
@@ -110,19 +117,18 @@ class NewDeviceForm extends Form {
     return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit} className="d-flex flex-column px-4">
-          <div
-            className="w-75"
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
-          >
-            <Input
-              autoFocus
-              name="deviceID"
-              type="text"
-              value={data.deviceID}
-              onChange={this.handleChange}
-              label="شناسه دستگاه"
-              error={errors.deviceID}
-            />
+          <div className="w-75 newDeviceFormInputContainer">
+            <div className="w-75">
+              <Input
+                autoFocus
+                name="deviceID"
+                type="text"
+                value={data.deviceID}
+                onChange={this.handleChange}
+                label="شناسه دستگاه"
+                error={errors.deviceID}
+              />
+            </div>
 
             <div className="w-75">
               <Input
@@ -145,6 +151,17 @@ class NewDeviceForm extends Form {
                 error={errors.phoneNumber}
               />
             </div>
+
+            <div className="w-75">
+              <Input
+                name="address"
+                type="text"
+                value={data.address}
+                onChange={this.handleChange}
+                label="محل نصب"
+                error={errors.address}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -155,7 +172,7 @@ class NewDeviceForm extends Form {
             <div className="checkbox-container d-flex flex-column">
               <div>
                 {hardwareList.map((item) => (
-                  <React.Fragment key={item.name}>
+                  <div key={item.name}>
                     <label htmlFor={item.name}>{item.label}</label>
                     <input
                       onChange={() => this.handleCheckboxChange(item.name)}
@@ -163,7 +180,7 @@ class NewDeviceForm extends Form {
                       name={item.name}
                       id={item.name}
                     />
-                  </React.Fragment>
+                  </div>
                 ))}
               </div>
             </div>
@@ -175,7 +192,7 @@ class NewDeviceForm extends Form {
             onClick={this.handleSubmitButton}
             className="btn btn-primary mt-2 w-25"
           >
-            ویرایش دستگاه
+            ثبت دستگاه
           </button>
         </form>
       </React.Fragment>

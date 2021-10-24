@@ -6,7 +6,29 @@ const HardwareModule = (props) => {
   return (
     <div className="hardware-button-container mb-4">
       <span className="label mb-2">{hardwareModule.label}</span>
-      <div>
+      <div>{getButtons(hardwareModule, onStartClick, onStopClick)}</div>
+    </div>
+  );
+};
+
+const getButtons = (hardwareModule, onStartClick, onStopClick) => {
+  if (hardwareModule.name === "Door") {
+    return (
+      <React.Fragment>
+        <button
+          onClick={() => {
+            onStartClick(hardwareModule);
+          }}
+          className="btn btn-success"
+        >
+          {hardwareModule["on_text"]}
+        </button>
+        <span></span>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
         <button
           onClick={() => {
             onStartClick(hardwareModule);
@@ -23,9 +45,8 @@ const HardwareModule = (props) => {
         >
           {hardwareModule["off_text"]}
         </button>
-      </div>
-    </div>
-  );
+      </React.Fragment>
+    );
+  }
 };
-
 export default HardwareModule;

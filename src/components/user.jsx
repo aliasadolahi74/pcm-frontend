@@ -62,7 +62,7 @@ class User extends Component {
     } = this.state;
     const devices = paginate(allDevices, currentPage, pageSize);
     const username = this.props.match.params.username;
-    const { nickname, datetime, isAdmin } = userInfo;
+    const { nickname, datetime, isAdmin, address, phoneNumber } = userInfo;
     return (
       <div>
         <h1>{nickname}</h1>
@@ -86,9 +86,22 @@ class User extends Component {
               {isAdmin === "1" ? (
                 <span></span>
               ) : (
-                <Link to={`${dir}/admin/editPassword/${username}`}>
-                  <i className="fa fa-edit icon-btn"></i>
-                </Link>
+                <React.Fragment>
+                  <Link to={`${dir}/admin/editPassword/${username}`}>
+                    <i className="fa fa-edit icon-btn"></i>
+                  </Link>
+                  <span>تلفن همراه</span>
+                  <span>{phoneNumber}</span>
+                  <Link to={`${dir}/admin/editPhoneNumber/${username}`}>
+                    <i className="fa fa-edit icon-btn"></i>
+                  </Link>
+
+                  <span>آدرس</span>
+                  <span className="small">{address}</span>
+                  <Link to={`${dir}/admin/editAddress/${username}`}>
+                    <i className="fa fa-edit icon-btn"></i>
+                  </Link>
+                </React.Fragment>
               )}
 
               <span>تاریخ ثبت‌نام</span>
