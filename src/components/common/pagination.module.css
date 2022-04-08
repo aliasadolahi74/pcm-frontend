@@ -1,0 +1,33 @@
+.PaginationBarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: center;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.PaginationBarItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: #02353c;
+  transition: 300ms;
+  color: #fff;
+  border-radius: 2px;
+  min-height: 30px;
+  min-width: 30px;
+  margin-right: 1px;
+  margin-left: 1px;
+  padding: 5px;
+}
+
+.PaginationBarItem:hover {
+  background-color: #449342;
+}
+
+.PaginationBarItem.CurrentPage {
+  background-color: #2eaf7d;
+}

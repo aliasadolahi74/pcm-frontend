@@ -36,6 +36,7 @@ class Users extends Component {
         alert(errors[0].message);
       } else {
         const allUsers = usersInfo.data.body || [];
+        console.log(allUsers);
         this.setState({ allUsers });
       }
     } catch (ex) {

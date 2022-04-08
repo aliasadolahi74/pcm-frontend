@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("token");
-
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&
@@ -11,10 +9,10 @@ axios.interceptors.response.use(null, (error) => {
   if (expectedError) {
     return new Promise(error);
   }
-
-  console.log("Loggin the error: ", error);
   alert("An unexpected error occured.");
-  return new Promise(error);
+  return new Promise((resolve, reject) => {
+    reject(error.response);
+  });
 });
 
 export default axios;

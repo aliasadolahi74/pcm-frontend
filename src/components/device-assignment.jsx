@@ -25,7 +25,7 @@ class DeviceAssignment extends Component {
           method: "POST",
           headers: { "content-type": "application/x-www-form-urlencoded" },
           data: qs.stringify(authData),
-          url: `${config.apiBaseURL}/non-assigned-devices.php`,
+          url: `${config.apiBaseURL}/get-devices.php`,
         };
         const devicesInfo = await axios(devicesOptions);
         const devices = devicesInfo.data.body;
@@ -84,9 +84,9 @@ class DeviceAssignment extends Component {
     if (authData.isAdmin) {
       return (
         <React.Fragment>
-          <section className="mb-5">
-            <div className="section-header">
-              <h1 className="section-title">
+          <section className='mb-5'>
+            <div className='section-header'>
+              <h1 className='section-title'>
                 {"تخصیص دستگاه به  " + clientUsername}
               </h1>
             </div>
@@ -94,15 +94,15 @@ class DeviceAssignment extends Component {
           <section>
             <form
               onSubmit={this.handleSubmit}
-              className="d-flex flex-column w-25 px-4"
+              className='d-flex flex-column w-25 px-4'
             >
               <select
-                name="deviceID"
-                id="deviceID"
-                className="form-control"
+                name='deviceID'
+                id='deviceID'
+                className='form-control'
                 onChange={this.handleSelectChange}
               >
-                <option value="">انتخاب کنید</option>
+                <option value=''>انتخاب کنید</option>
                 {devices.map((item) => (
                   <option key={item.key} value={item.deviceID}>
                     {item.deviceName + " - " + item.deviceID}
@@ -111,9 +111,9 @@ class DeviceAssignment extends Component {
               </select>
               <button
                 disabled={this.validate()}
-                type="submit"
+                type='submit'
                 onClick={this.handleSubmitButton}
-                className="btn btn-primary mt-5"
+                className='btn btn-primary mt-5'
               >
                 تخصیص
               </button>

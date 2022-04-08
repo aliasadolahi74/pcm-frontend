@@ -5,10 +5,10 @@ import TableBody from "./tableBody";
 class Table extends Component {
   state = {};
   render() {
-    const { columns, data } = this.props;
+    const { columns, data, className } = this.props;
 
     return (
-      <table className="table">
+      <table className={className ? "table " + className : "table"}>
         <TableHeader columns={columns} />
         <TableBody data={data} columns={columns} />
       </table>

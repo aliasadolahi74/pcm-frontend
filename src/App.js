@@ -7,7 +7,10 @@ import NotFound from "./components/notFound";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Login from "./components/login";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
-import { MetaTags } from "react-meta-tags";
+import jwtDecode from "jwt-decode";
+import axios from "axios";
+import config from "./config.json";
+import qs from "qs";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 function App() {
@@ -17,22 +20,57 @@ function App() {
     },
   });
 
+  const token = localStorage.getItem("token");
+  const now = new Date().getTime();
+  let expireTimestamp = 0;
+  let routes;
+  try {
+    const decodedToken = jwtDecode(token);
+    expireTimestamp = decodedToken["expire"];
+  } catch (e) {}
+  if (token !== null && expireTimestamp > now) {
+    refreshToken(token);
+    routes = (
+      <Switch>
+        <Route path={`${dir}/admin`} component={AdminPanel} />
+        <Route path={`${dir}/not-found`} component={NotFound} />
+        <Route path={`${dir}/login`} component={Login} />
+
+        <Redirect from={`${dir}/`} exact to={`${dir}/login`} />
+        <Redirect to={`${dir}/not-found`} />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path={`${dir}/admin`} component={Login} />
+        <Route path={`${dir}/not-found`} component={NotFound} />
+        <Route path={`${dir}/login`} component={Login} />
+        <Redirect from={`${dir}/`} exact to={`${dir}/login`} />
+        <Redirect to={`${dir}/not-found`} />
+      </Switch>
+    );
+  }
   return (
     <MuiThemeProvider theme={theme}>
-      <MetaTags>
-        <meta name="viewport" content="width=1300" />
-      </MetaTags>
-      <div className="App">
-        <Switch>
-          <Route path={`${dir}/admin`} component={AdminPanel} />
-          <Route path={`${dir}/not-found`} component={NotFound} />
-          <Route path={`${dir}/login`} component={Login} />
-          <Redirect from={`${dir}/`} exact to={`${dir}/login`} />
-          <Redirect to={`${dir}/not-found`} />
-        </Switch>
-      </div>
+      <div className='App'>{routes}</div>
     </MuiThemeProvider>
   );
+}
+
+async function refreshToken(oldToken) {
+  const loginOptions = {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    data: qs.stringify({ token: oldToken }),
+    url: `${config.apiBaseURL}/refresh-token.php`,
+  };
+  const loginInfo = await axios(loginOptions);
+  if (loginInfo.data.status) {
+    const token = loginInfo.data.body.token;
+    localStorage.removeItem("token");
+    localStorage.setItem("token", token);
+  }
 }
 
 export default App;

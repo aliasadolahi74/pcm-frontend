@@ -12,7 +12,7 @@ const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditDeviceForm extends Form {
   state = {
-    data: { deviceID: "", deviceName: "", phoneNumber: "" },
+    data: { deviceID: "", deviceName: "", phoneNumber: "", address: "" },
     errors: {},
     hardwareList: [],
     authData: { username: authData.username, token: authData.token },
@@ -34,6 +34,13 @@ class EditDeviceForm extends Form {
       "string.empty": "وارد کردن نام دستگاه الزامی است",
       "string.length": "اندازه شماره سیم کارت باید ۱۱ رقم باشد",
     }),
+    address: Joi.string()
+      .regex(/^[، آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+\d]+$/s)
+      .allow("", null)
+      .messages({
+        "string.pattern.base":
+          "محل نصب باید فارسی باشد. استفاده از کارکترهایی بجز - و ، غیرمجاز است",
+      }),
   };
 
   async componentDidMount() {
@@ -73,13 +80,19 @@ class EditDeviceForm extends Form {
       const { data: receivedData } = deviceDetailsResponse;
       if (receivedData.status) {
         const details = receivedData.body;
-        const { deviceID, deviceName, phoneNumber } = details.deviceInfo;
+        const {
+          deviceID,
+          deviceName,
+          phoneNumber,
+          address,
+        } = details.deviceInfo;
         const checkedHardware = details.hardwareName.split(",");
         console.log(checkedHardware);
         const data = {
-          deviceID: deviceID,
-          deviceName: deviceName,
-          phoneNumber: phoneNumber,
+          deviceID,
+          deviceName,
+          phoneNumber,
+          address,
         };
         this.setState({ checkedHardware, data });
       } else {
@@ -169,6 +182,17 @@ class EditDeviceForm extends Form {
                 error={errors.phoneNumber}
               />
             </div>
+
+            <div className="w-75">
+              <Input
+                name="address"
+                type="text"
+                value={data.address}
+                onChange={this.handleChange}
+                label="محل نصب"
+                error={errors.address}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -181,7 +205,7 @@ class EditDeviceForm extends Form {
                 {hardwareList.map((item) => {
                   const isChecked = checkedHardware.includes(item.name);
                   return (
-                    <React.Fragment key={item.name}>
+                    <div key={item.name}>
                       <label htmlFor={item.name}>{item.label}</label>
                       <input
                         onChange={() => this.handleCheckboxChange(item.name)}
@@ -190,7 +214,7 @@ class EditDeviceForm extends Form {
                         name={item.name}
                         id={item.name}
                       />
-                    </React.Fragment>
+                    </div>
                   );
                 })}
               </div>

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 class SidebarMenu extends Component {
   render() {
     const { items } = this.props;
-    const websiteURL = process.env.WEBSITE;
+    const websiteURL = process.env.REACT_APP_WEBSITE;
     return (
       <aside className="sidebar">
         <div className="title">

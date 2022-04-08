@@ -31,7 +31,6 @@ class Devices extends Component {
       };
       const devicesInfo = await axios(devicesOptions);
       const allDevices = devicesInfo.data.body;
-      console.log(devicesInfo);
       this.setState({ allDevices });
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
@@ -59,13 +58,13 @@ class Devices extends Component {
     const devices = paginate(allDevices, currentPage, pageSize);
     return (
       <React.Fragment>
-        <section className="mb-2">
-          <div className="section-header">
-            <h1 className="section-title">دستگاه‌ها</h1>
-            <div className="button-container">
+        <section className='mb-2'>
+          <div className='section-header'>
+            <h1 className='section-title'>دستگاه‌ها</h1>
+            <div className='button-container'>
               {authData.isAdmin ? (
-                <Link className="btn btn-success" to="./new-device">
-                  <i className="fa fa-plus"></i>
+                <Link className='btn btn-success' to='./new-device'>
+                  <i className='fa fa-plus'></i>
                 </Link>
               ) : null}
             </div>
@@ -84,8 +83,8 @@ class Devices extends Component {
         <AlertDialog
           open={isAlertDialogOpen}
           onClose={this.handleAlertDialogClose}
-          title="حذف دستگاه"
-          message="آیا میخواهید این دستگاه را حذف کنید؟"
+          title='حذف دستگاه'
+          message='آیا میخواهید این دستگاه را حذف کنید؟'
           onYesClick={() => this.handleYesClick(selectedDeleteButton)}
         />
       </React.Fragment>

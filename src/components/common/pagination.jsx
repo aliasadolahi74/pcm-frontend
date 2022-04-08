@@ -1,44 +1,101 @@
-import React, { Component } from "react";
-import _ from "lodash";
+import React from "react";
+import classes from "./pagination.module.css";
 
-class Pagination extends Component {
-  render() {
-    const { currentPage, itemsCount, onPageChange } = this.props;
+const Pagination = (props) => {
+  const { currentPage, onPageChange: onPageNumberClick, itemsCount } = props;
 
-    const numberOfPages = this.getNumberOfPages(itemsCount);
+  const numberOfPages = Math.ceil(itemsCount / 5);
 
-    return (
-      <nav
-        aria-label="Page navigation"
-        className="d-flex justify-content-center mt-auto"
-      >
-        <ul className="pagination">
-          {numberOfPages === 1
-            ? ""
-            : _.range(1, numberOfPages + 1).map((page) => (
-                <li
-                  className={
-                    "page-item " + (currentPage === page ? "active" : "")
-                  }
-                  key={page}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onPageChange(page);
-                  }}
-                >
-                  <a className="page-link" href="/#">
-                    {page}
-                  </a>
-                </li>
-              ))}
-        </ul>
-      </nav>
-    );
-  }
+  const arr = new Array(numberOfPages);
+  const PAGE_NUMBER_LIMIT = 5;
 
-  getNumberOfPages = (itemsCount) => {
-    return Math.ceil(itemsCount / this.props.pageSize);
+  console.log("conditionedData: ", numberOfPages);
+  arr.fill(0);
+
+  const insertPaginationItems = (currentPage, limit, numberOfPages) => {
+    let pagination = [];
+
+    if (currentPage <= limit) {
+      for (let i = 1; i < currentPage; i++) {
+        const classArr = [classes.PaginationBarItem];
+        if (currentPage === i) {
+          classArr.push(classes.CurrentPage);
+        }
+        pagination.push(
+          <span
+            key={i}
+            onClick={() => onPageNumberClick(i)}
+            className={classArr.join(" ")}
+          >
+            {i}
+          </span>
+        );
+      }
+    } else {
+      for (let i = currentPage - limit + 1; i < currentPage; i++) {
+        const classArr = [classes.PaginationBarItem];
+        if (currentPage === i) {
+          classArr.push(classes.CurrentPage);
+        }
+        pagination.push(
+          <span
+            key={i}
+            onClick={() => onPageNumberClick(i)}
+            className={classArr.join(" ")}
+          >
+            {i}
+          </span>
+        );
+      }
+    }
+
+    for (
+      let i = currentPage;
+      i < currentPage + limit && i <= numberOfPages;
+      i++
+    ) {
+      const classArr = [classes.PaginationBarItem];
+      if (currentPage === i) {
+        classArr.push(classes.CurrentPage);
+      }
+      pagination.push(
+        <span
+          key={i}
+          onClick={() => onPageNumberClick(i)}
+          className={classArr.join(" ")}
+        >
+          {i}
+        </span>
+      );
+    }
+    return pagination;
   };
-}
+
+  return (
+    <div className={classes.PaginationBarContainer}>
+      {currentPage > 1 ? (
+        <span
+          key='first'
+          onClick={() => onPageNumberClick(1)}
+          className={classes.PaginationBarItem}
+        >
+          اولین
+        </span>
+      ) : null}
+
+      {insertPaginationItems(currentPage, PAGE_NUMBER_LIMIT, numberOfPages)}
+
+      {currentPage < numberOfPages ? (
+        <span
+          key='last'
+          onClick={() => onPageNumberClick(numberOfPages)}
+          className={classes.PaginationBarItem}
+        >
+          آخرین
+        </span>
+      ) : null}
+    </div>
+  );
+};
 
 export default Pagination;

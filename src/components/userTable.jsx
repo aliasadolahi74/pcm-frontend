@@ -9,6 +9,7 @@ class UserTable extends Component {
     columns: [
       { name: "nickname", label: "نام" },
       { name: "username", label: "نام کاربری" },
+      { name: "phoneNumber", label: "شماره تماس" },
       { name: "datetime", label: "تاریخ ثبت‌نام" },
       {
         name: "deleteBtn",
