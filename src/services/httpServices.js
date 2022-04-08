@@ -1,5 +1,11 @@
 import axios from "axios";
 
+axios.interceptors.request.use((config) => {
+  config.baseURL = process.env.REACT_APP_API_ENDPOINT;
+  console.log(config.baseURL);
+  return config;
+});
+
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&
