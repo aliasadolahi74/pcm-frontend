@@ -13,7 +13,6 @@ import { DatePicker } from "jalali-react-datepicker";
 import { filterDatetime } from "./utils/filter";
 import { Link } from "react-router-dom";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
-
 class Device extends Component {
   state = {
     hardwareModules: [],
@@ -25,6 +24,8 @@ class Device extends Component {
     filterStartDate: "",
     filterEndDate: "",
   };
+
+  deviceID = this.props.match.params.deviceID;
 
   async componentDidMount() {
     const deviceHardwareOptions = {
@@ -60,7 +61,9 @@ class Device extends Component {
 
     const { data } = await axios(deviceInfoOption);
     if (data.status) {
-      this.setState({ deviceName: data.body.deviceName });
+      const { body } = data;
+      const { deviceName, description } = body;
+      this.setState({ deviceName, description });
     }
 
     const deviceReportOptions = {
@@ -110,8 +113,6 @@ class Device extends Component {
   };
 
   render() {
-    const deviceID = this.props.match.params.deviceID;
-
     const {
       hardwareModules,
       allReportData,
@@ -121,6 +122,7 @@ class Device extends Component {
       filterStartDate,
       filterEndDate,
       deviceName,
+      description,
     } = this.state;
 
     let conditionedData = {};
@@ -137,7 +139,7 @@ class Device extends Component {
     return (
       <div className='device-info-container'>
         <h1>{deviceName}</h1>
-        <h6 className='mt-3 mb-5'>{deviceID}</h6>
+        <h6 className='mt-3 mb-5'>{description}</h6>
         <div className='button-container'>
           {hardwareModules.map((item) => {
             return (
@@ -164,10 +166,10 @@ class Device extends Component {
         <div className='report-container'>
           <div className='report-header'>
             <Link
-              to={`${dir}/admin/report/${deviceID}`}
+              to={`${dir}/admin/report/${this.deviceID}`}
               className='icon-btn fa fa-file-excel'
             />
-            <Link to={`${dir}/admin/print/${deviceID}`}>
+            <Link to={`${dir}/admin/print/${this.deviceID}`}>
               <i className='icon-btn fa fa-print'></i>
             </Link>
             <DatePicker

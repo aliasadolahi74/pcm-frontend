@@ -30,9 +30,9 @@ class EditPasswordForm extends Form {
   };
 
   schema = {
-    clientPassword: Joi.string().min(8).max(50).required().messages({
+    clientPassword: Joi.string().min(6).max(50).required().messages({
       "string.empty": "وارد کردن رمز عبور الزامی است",
-      "string.min": "طول رمز عبور باید حداقل ۸ کارکتر باشد",
+      "string.min": "طول رمز عبور باید حداقل ۶ کارکتر باشد",
       "string.max": "طول رمز عبور باید حداکثر ۵۰ کارکتر باشد",
     }),
   };
@@ -63,38 +63,33 @@ class EditPasswordForm extends Form {
   };
 
   render() {
-    const {
-      data,
-      errors,
-      dialogIsVisible,
-      dialogMessage,
-      dialogSuccess,
-    } = this.state;
+    const { data, errors, dialogIsVisible, dialogMessage, dialogSuccess } =
+      this.state;
     return (
       <React.Fragment>
         <form
           onSubmit={this.handleSubmit}
-          className="d-flex flex-column w-25 px-4"
+          className='d-flex flex-column w-25 px-4'
         >
           <Input
-            name="clientPassword"
-            type="password"
+            name='clientPassword'
+            type='password'
             value={data.clientPassword}
             onChange={this.handleChange}
-            label="رمز عبور"
+            label='رمز عبور'
             error={errors.clientPassword}
           />
           <button
-            type="submit"
+            type='submit'
             disabled={this.validate()}
             onClick={this.handleSubmitButton}
-            className="btn btn-primary mt-2"
+            className='btn btn-primary mt-2'
           >
             ویرایش رمز عبور
           </button>
         </form>
         <Dialog
-          id="dialog"
+          id='dialog'
           isVisible={dialogIsVisible}
           onDialogEnds={this.handleOnDialogEnds}
           message={dialogMessage}

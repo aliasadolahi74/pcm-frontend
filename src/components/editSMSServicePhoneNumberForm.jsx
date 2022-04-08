@@ -3,7 +3,7 @@ import Joi from "joi";
 import Input from "./common/input";
 import Form from "./common/form";
 import qs from "qs";
-import axios from "axios";
+import axios from "../services/httpServices";
 import config from "../config.json";
 import { authData } from "../services/authServices";
 import { getErrorString } from "./utils/error-converter";
@@ -29,17 +29,17 @@ class EditSMSServicePhoneNumberForm extends Form {
   async componentDidMount() {
     try {
       const response = await axios.post(
-        `${config.apiBaseURL}/getSMSServicePhoneNumber.php`,
+        "/getSMSServicePhoneNumber.php",
         qs.stringify({
           ...authData,
         })
       );
 
       const { data } = response;
-      console.log(response);
       if (data.ok) {
+        const { body } = data;
         const state = { ...this.state };
-        state.data = { phoneNumber: data.phoneNumber };
+        state.data = { phoneNumber: body.phoneNumber };
         this.setState(state);
       } else {
         console.log(data.errors);
@@ -50,21 +50,22 @@ class EditSMSServicePhoneNumberForm extends Form {
   }
 
   doSubmit = async () => {
-    const { phoneNumber } = this.state;
+    const { phoneNumber } = this.state.data;
 
     try {
       const response = await axios.post(
-        `${config.apiBaseURL}/changeSMSServicePhoneNumber.php`,
+        "/changeSMSServicePhoneNumber.php",
         qs.stringify({
           ...authData,
           phoneNumber,
         })
       );
       const { data } = response;
+      console.log(response);
       if (data.ok) {
         toast.success("شماره با موفقیت ویرایش گردید");
       } else {
-        toast.error(getErrorString(data.errors));
+        toast.error(data.errors);
       }
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {

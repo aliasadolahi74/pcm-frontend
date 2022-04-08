@@ -8,8 +8,6 @@ const Pagination = (props) => {
 
   const arr = new Array(numberOfPages);
   const PAGE_NUMBER_LIMIT = 5;
-
-  console.log("conditionedData: ", numberOfPages);
   arr.fill(0);
 
   const insertPaginationItems = (currentPage, limit, numberOfPages) => {

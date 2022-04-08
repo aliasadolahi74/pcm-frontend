@@ -25,9 +25,9 @@ class LoginForm extends Form {
       "string.min": "طول نام کاربری باید حداقل ۸ کارکتر باشد",
       "string.max": "طول نام کاربری باید حداکثر ۳۰ کارکتر باشد",
     }),
-    password: Joi.string().min(8).max(50).required().messages({
+    password: Joi.string().min(6).max(50).required().messages({
       "string.empty": "وارد کردن رمز عبور الزامی است",
-      "string.min": "طول رمز عبور باید حداقل ۸ کارکتر باشد",
+      "string.min": "طول رمز عبور باید حداقل ۶ کارکتر باشد",
       "string.max": "طول رمز عبور باید حداکثر ۵۰ کارکتر باشد",
     }),
   };
