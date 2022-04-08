@@ -22,6 +22,7 @@ function App() {
 
   const token = localStorage.getItem("token");
   const now = new Date().getTime();
+  console.log(now);
   let expireTimestamp = 0;
   let routes;
   try {

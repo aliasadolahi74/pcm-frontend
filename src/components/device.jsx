@@ -20,7 +20,7 @@ class Device extends Component {
     columns: [],
     allReportData: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 15,
     filterStartDate: "",
     filterEndDate: "",
   };
@@ -39,8 +39,8 @@ class Device extends Component {
     };
 
     const hardwareListResponse = await axios(deviceHardwareOptions);
-    const hardwareModules = hardwareListResponse.data.body;
     console.log(hardwareListResponse);
+    const hardwareModules = hardwareListResponse.data.body;
     hardwareModules.map((item, index) =>
       hardwareModules[index].isActive === "1"
         ? (hardwareModules.isActive = true)
@@ -62,8 +62,8 @@ class Device extends Component {
     const { data } = await axios(deviceInfoOption);
     if (data.status) {
       const { body } = data;
-      const { deviceName, description } = body;
-      this.setState({ deviceName, description });
+      const { deviceName, description, address } = body;
+      this.setState({ deviceName, description, address });
     }
 
     const deviceReportOptions = {
@@ -123,6 +123,7 @@ class Device extends Component {
       filterEndDate,
       deviceName,
       description,
+      address,
     } = this.state;
 
     let conditionedData = {};
@@ -139,6 +140,7 @@ class Device extends Component {
     return (
       <div className='device-info-container'>
         <h1>{deviceName}</h1>
+        <h6 className='mt-3 mb-5'>{address}</h6>
         <h6 className='mt-3 mb-5'>{description}</h6>
         <div className='button-container'>
           {hardwareModules.map((item) => {
@@ -251,7 +253,7 @@ class Device extends Component {
       headers: { "content-type": "application/x-www-form-urlencoded" },
       data: qs.stringify({
         ...authData,
-        devicePhoneNumber: this.state.phoneNumber,
+        deviceID: this.deviceID,
         command: textSMS,
       }),
       url: `${config.apiBaseURL}/command.php`,

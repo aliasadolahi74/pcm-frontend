@@ -10,19 +10,25 @@ class DeviceTable extends Component {
     columns: [
       { name: "deviceID", label: "شناسه دستگاه" },
       { name: "deviceName", label: "نام دستگاه" },
-      { name: "phoneNumber", label: "شماره سیمکارت" },
+      {
+        name: "phoneNumber",
+        label: "شماره سیمکارت",
+        content: (item) => (
+          <div style={{ direction: "ltr" }}>{item.phoneNumber}</div>
+        ),
+      },
       { name: "nickname", label: "نام مشتری" },
       { name: "address", label: "محل نصب" },
       {
         name: "deleteBtn",
         content: (item) => (
           <button
-            className="btn btn-outline-danger"
+            className='btn btn-outline-danger'
             onClick={() => {
               this.handleDelete(item);
             }}
           >
-            <i className="fa fa-trash mr-1"></i>
+            <i className='fa fa-trash mr-1'></i>
           </button>
         ),
       },
@@ -32,7 +38,7 @@ class DeviceTable extends Component {
           if (authData.isAdmin) {
             return (
               <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
-                <i className="fa fa-edit mr-1"></i>
+                <i className='fa fa-edit mr-1'></i>
               </Link>
             );
           } else {
@@ -45,7 +51,7 @@ class DeviceTable extends Component {
         content: (item) => (
           <Link to={`${dir}/admin/device/${item.deviceID}/${item.phoneNumber}`}>
             جزئیات
-            <i className="fa fa-info-circle mr-1"></i>
+            <i className='fa fa-info-circle mr-1'></i>
           </Link>
         ),
       },

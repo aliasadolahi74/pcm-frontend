@@ -74,7 +74,9 @@ class AdminPanel extends Component {
   componentDidMount() {
     var sidebarItems;
     if (!authData.isAdmin) {
-      sidebarItems = this.state.sidebarItems.filter((item) => item.id !== "2");
+      sidebarItems = this.state.sidebarItems.filter(
+        (item) => item.id !== "2" && item.id !== "4"
+      );
     } else {
       sidebarItems = this.state.sidebarItems.filter((item) => item.id !== "5");
     }
