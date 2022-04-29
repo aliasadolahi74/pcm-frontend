@@ -110,7 +110,10 @@ class User extends Component {
     const devices = paginate(allDevices, currentPage, pageSize);
     const username = this.props.match.params.username;
     const { nickname, datetime, isAdmin, address, phoneNumber } = userInfo;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
     return (
       <div>
         <h1>{nickname}</h1>
@@ -136,11 +139,16 @@ class User extends Component {
               ) : (
                 <React.Fragment>
                   <Link to={`${dir}/admin/editPassword/${username}`}>
+<<<<<<< HEAD
                     <i className='fa fa-edit icon-btn'></i>
+=======
+                    <i className="fa fa-edit icon-btn"></i>
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
                   </Link>
                   <span>تلفن همراه</span>
                   <span>{phoneNumber}</span>
                   <Link to={`${dir}/admin/editPhoneNumber/${username}`}>
+<<<<<<< HEAD
                     <i className='fa fa-edit icon-btn'></i>
                   </Link>
 
@@ -148,6 +156,15 @@ class User extends Component {
                   <span className='small'>{address}</span>
                   <Link to={`${dir}/admin/editAddress/${username}`}>
                     <i className='fa fa-edit icon-btn'></i>
+=======
+                    <i className="fa fa-edit icon-btn"></i>
+                  </Link>
+
+                  <span>آدرس</span>
+                  <span className="small">{address}</span>
+                  <Link to={`${dir}/admin/editAddress/${username}`}>
+                    <i className="fa fa-edit icon-btn"></i>
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
                   </Link>
                 </React.Fragment>
               )}

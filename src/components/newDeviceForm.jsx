@@ -12,6 +12,7 @@ const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class NewDeviceForm extends Form {
   state = {
+<<<<<<< HEAD
     data: {
       deviceID: "",
       deviceName: "",
@@ -21,6 +22,9 @@ class NewDeviceForm extends Form {
       installationDatetime: "",
       type: "",
     },
+=======
+    data: { deviceID: "", deviceName: "", phoneNumber: "", address: "" },
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
     errors: {},
     hardwareList: [],
     authData: { username: authData.username, token: authData.token },
@@ -49,6 +53,7 @@ class NewDeviceForm extends Form {
         "string.pattern.base":
           "محل نصب باید فارسی باشد. استفاده از کارکترهایی بجز - و ، غیرمجاز است",
       }),
+<<<<<<< HEAD
 
     description: Joi.string()
       .regex(
@@ -76,6 +81,8 @@ class NewDeviceForm extends Form {
       .messages({
         "string.pattern.base": "تاریخ نصب دارای کارکتر غیرمجاز است",
       }),
+=======
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
   };
 
   async componentDidMount() {
@@ -152,9 +159,27 @@ class NewDeviceForm extends Form {
     const { data, errors, hardwareList } = this.state;
     return (
       <React.Fragment>
+<<<<<<< HEAD
         <form onSubmit={this.handleSubmit} className='d-flex flex-column px-4'>
           <div className='w-75 newDeviceFormInputContainer'>
             <div className='w-75'>
+=======
+        <form onSubmit={this.handleSubmit} className="d-flex flex-column px-4">
+          <div className="w-75 newDeviceFormInputContainer">
+            <div className="w-75">
+              <Input
+                autoFocus
+                name="deviceID"
+                type="text"
+                value={data.deviceID}
+                onChange={this.handleChange}
+                label="شناسه دستگاه"
+                error={errors.deviceID}
+              />
+            </div>
+
+            <div className="w-75">
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
               <Input
                 autoFocus
                 name='deviceID'
@@ -188,6 +213,7 @@ class NewDeviceForm extends Form {
               />
             </div>
 
+<<<<<<< HEAD
             <div className='w-75'>
               <Input
                 name='address'
@@ -231,6 +257,18 @@ class NewDeviceForm extends Form {
                 error={errors.type}
               />
             </div>
+=======
+            <div className="w-75">
+              <Input
+                name="address"
+                type="text"
+                value={data.address}
+                onChange={this.handleChange}
+                label="محل نصب"
+                error={errors.address}
+              />
+            </div>
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
           </div>
 
           <div className='form-group'>

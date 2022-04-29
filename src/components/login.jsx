@@ -20,6 +20,7 @@ class Login extends Component {
       return null;
     } else {
       return (
+<<<<<<< HEAD
         <div className='background'>
           <div className='login-page-container'>
             <div className='container-fluid p-5 h-100 w-100 main-section'>
@@ -36,6 +37,23 @@ class Login extends Component {
                     تاسیسات الکتریکی
                   </h4>
                   <p className='about-us-text'>
+=======
+        <div className="background">
+          <div className="login-page-container">
+            <div className="container-fluid p-5 h-100 w-100 main-section">
+              <div className="d-flex justify-content-center align-items-center flex-column login-form-container">
+                <a href={websiteURL}>
+                  <img src={icon} className="tmb-logo" alt="logo" />
+                </a>
+                <LoginForm />
+              </div>
+              <div className="d-flex w-100 flex-column align-items-center justify-content-center about-us-container">
+                <div className="content p-5 w-100 h-100 d-flex justify-content-center">
+                  <h4 className="mb-4 nowrap">
+                    سامانه تله‌متری شرکت طراحان مدار باختر
+                  </h4>
+                  <p className="about-us-text">
+>>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
                     شرکت طراحان مدار باختر در سال ۱۳۹۴ با هدف تولید و بروزآوری
                     محصولات مورد نیاز صنایع «در حوزه‌های برق، الکترونیک،
                     مخابرات، کنترل و ابزار دقیق» و توسعه اقتصاد دانش‌محور و
