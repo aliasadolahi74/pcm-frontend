@@ -9,6 +9,8 @@ const Input = ({
   autoFocus,
   className,
   error,
+  id,
+  withNoPlaceholder,
 }) => {
   return (
     <div className={className ? "form-group " + className : "form-group"}>
@@ -16,15 +18,15 @@ const Input = ({
       <input
         autoFocus={autoFocus ? true : false}
         type={type}
-        className="form-control"
-        id={name}
+        className='form-control'
+        id={id === null ? name : id}
         name={name}
         value={value}
         onChange={onChange}
-        placeholder={`${label} را وارد کنید`}
+        placeholder={withNoPlaceholder ? null : `${label} را وارد کنید`}
       />
       {error && (
-        <div className="alert alert-danger mt-2">
+        <div className='alert alert-danger mt-2'>
           <small>{error}</small>
         </div>
       )}

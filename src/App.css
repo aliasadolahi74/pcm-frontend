@@ -497,7 +497,7 @@ a:hover {
   row-gap: 20px;
 }
 
-.checkbox-container > div > div {
+.checkbox-container > div:first-child > div {
   display: grid;
   grid-template-columns: 150px 50px;
   row-gap: 10px;

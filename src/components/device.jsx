@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import HardwareModule from "./hardwareModule";
-import axios from "axios";
-import qs from "qs";
 import "../services/httpServices";
 import config from "../config.json";
 import { getErrorString } from "./utils/error-converter";
@@ -12,7 +10,12 @@ import Pagination from "./common/pagination";
 import { DatePicker } from "jalali-react-datepicker";
 import { filterDatetime } from "./utils/filter";
 import { Link } from "react-router-dom";
+import qs from "qs";
+import getToken from "./../services/token";
+import axios from "./../services/httpServices";
+import { Toaster, toast } from "react-hot-toast";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
+
 class Device extends Component {
   state = {
     hardwareModules: [],
@@ -77,7 +80,7 @@ class Device extends Component {
     };
 
     const deviceReportResponse = await axios(deviceReportOptions);
-    console.log(deviceReportResponse);
+
     if (deviceReportResponse.data.status) {
       const deviceReportArray = deviceReportResponse.data.body;
       if (deviceReportArray.length > 0) {
@@ -88,12 +91,52 @@ class Device extends Component {
     }
   }
 
+  handleDeleteButtonClick = async (item) => {
+    const token = getToken();
+    const reportID = item.key;
+    if (window.confirm("آیا میخواهید این آیتم را حذف کنید؟")) {
+      try {
+        const response = await axios.post(
+          "/deleteReportItem.php",
+          qs.stringify({ reportID, deviceID: this.deviceID, token })
+        );
+
+        const { data } = response;
+        if (data.status) {
+          const newState = { ...this.state };
+          const newReports = [...newState.allReportData];
+          newState.allReportData = newReports.filter(
+            (item) => item.key !== reportID
+          );
+          this.setState(newState);
+          toast.success("گزارش با موفقیت حذف شد");
+        } else {
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   updateColumnsFromReport = ({ report }) => {
     const reportArray = JSON.parse(report);
     const columns = reportArray.map((item) => {
       return { name: item.name, label: item.label };
     });
     columns.push({ name: "datetime", label: "زمان" });
+    columns.push({
+      name: "deleteButton",
+      label: "",
+      content: (item) => (
+        <button
+          onClick={() => this.handleDeleteButtonClick(item)}
+          className='btn btn-danger'
+          style={{ fontSize: 12 }}
+        >
+          <i className='fa fa-trash '></i>
+        </button>
+      ),
+    });
     return columns;
   };
 
@@ -137,12 +180,15 @@ class Device extends Component {
       conditionedData = allReportData;
     }
     const reportData = paginate(conditionedData, currentPage, pageSize);
+    console.log("reportData", reportData);
     return (
       <div className='device-info-container'>
+        <Toaster />
         <h1>{deviceName}</h1>
         <h6 className='mt-3 mb-5'>{address}</h6>
         <h6 className='mt-3 mb-5'>{description}</h6>
         <div className='button-container'>
+          {console.log("modules", hardwareModules)}
           {hardwareModules.map((item) => {
             return (
               <HardwareModule
@@ -153,16 +199,6 @@ class Device extends Component {
               />
             );
           })}
-        </div>
-        <div className='mb-5'>
-          <button
-            id=''
-            type='button'
-            onClick={this.handleReportingButtonClick}
-            className='btn btn-outline-primary mt-4 mr-2 '
-          >
-            <i className='fas fa-sync'></i>&nbsp; درخواست گزارش لحظه‌ای
-          </button>
         </div>
 
         <div className='report-container'>
@@ -229,10 +265,6 @@ class Device extends Component {
 
   handleOnDialogEnds = () => {
     this.setState({ dialogIsVisible: false });
-  };
-
-  handleReportingButtonClick = async () => {
-    this.sendTextMessage("G");
   };
 
   handleStartButtonClick = async (item) => {

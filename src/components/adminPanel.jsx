@@ -54,7 +54,7 @@ class AdminPanel extends Component {
         id: "4",
         title: "سرویس پیامکی",
         link: `${dir}/admin/sms-settings`,
-        fontAwesomeIcon: "fa-gear",
+        fontAwesomeIcon: "fa-sms",
       },
       {
         id: "5",

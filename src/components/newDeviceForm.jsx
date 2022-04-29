@@ -83,7 +83,7 @@ class NewDeviceForm extends Form {
       const hardwareOptions = {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        data: qs.stringify(this.state.authData),
+        data: qs.stringify({ ...this.state.authData }),
         url: `${config.apiBaseURL}/hardwareList.php`,
       };
       const hardwareListResponse = await axios(hardwareOptions);

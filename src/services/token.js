@@ -1,4 +1,4 @@
-import axios from "./axios";
+import axios from "./httpServices";
 import qs from "qs";
 import jwtDecode from "jwt-decode";
 

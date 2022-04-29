@@ -18,7 +18,10 @@ class DeviceTable extends Component {
         ),
       },
       { name: "nickname", label: "نام مشتری" },
+      { name: "description", label: "توضیحات" },
+      { name: "type", label: "نوع دستگاه" },
       { name: "address", label: "محل نصب" },
+      { name: "installationDatetime", label: "زمان نصب" },
       {
         name: "deleteBtn",
         content: (item) => (

@@ -50,9 +50,10 @@ class EditPasswordForm extends Form {
       url: `${config.apiBaseURL}/editPassword.php`,
     };
     const editPasswordResponse = await axios(editPasswordOption);
+    console.log(editPasswordResponse);
     const status = editPasswordResponse.data.status;
     if (status) {
-      window.location = `${dir}/admin/user/clientUsername`;
+      // window.location = `${dir}/admin/user/clientUsername`;
     } else {
       this.setState({
         dialogIsVisible: true,

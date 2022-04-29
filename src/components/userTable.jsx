@@ -10,17 +10,18 @@ class UserTable extends Component {
       { name: "nickname", label: "نام" },
       { name: "username", label: "نام کاربری" },
       { name: "phoneNumber", label: "شماره تماس" },
+      { name: "count", label: "تعداد دستگاه" },
       { name: "datetime", label: "تاریخ ثبت‌نام" },
       {
         name: "deleteBtn",
         content: (item) => (
           <button
-            className="btn btn-outline-danger"
+            className='btn btn-outline-danger'
             onClick={() => {
               this.handleDelete(item);
             }}
           >
-            <i className="fa fa-trash mr-1"></i>
+            <i className='fa fa-trash mr-1'></i>
           </button>
         ),
       },
@@ -29,7 +30,7 @@ class UserTable extends Component {
         content: (item) => (
           <Link to={`${dir}/admin/user/${item.username}`}>
             جزئیات
-            <i className="fa fa-info-circle mr-1"></i>
+            <i className='fa fa-info-circle mr-1'></i>
           </Link>
         ),
       },

@@ -9,36 +9,18 @@ class Dashboard extends Component {
   state = {
     user: {},
     refreshes: 0,
-    pumpColumns: [
+    columns: [
       { name: "deviceName", label: "عنوان دستگاه" },
-      { name: "pump", label: "وضعیت موتور" },
+      { name: "security", label: "وضعیت سیستم امنیتی" },
       { name: "controlFaze", label: "وضعیت کنترل فاز" },
+      { name: "pump", label: "وضعیت موتور" },
       { name: "datetime", label: "آخرین زمان گزارش" },
     ],
-
     userDeviceNumberColumns: [
       { name: "nickname", label: "نام کاربر" },
       { name: "count", label: "تعداد دستگاه‌ها" },
     ],
-
-    usersDeviceCountData: [],
-
-    securityColumns: [
-      { name: "deviceName", label: "عنوان دستگاه" },
-      { name: "security", label: "وضعیت" },
-      { name: "datetime", label: "آخرین زمان گزارش" },
-    ],
-
-    analogColumns: [
-      { name: "deviceName", label: "عنوان دستگاه" },
-      { name: "analog1", label: "آنالوگ (حجم متر مکعب)" },
-      { name: "analog2", label: "آنالوگ (ارتفاع سانتیمتر)" },
-      { name: "analog3", label: "آنالوگ (نامشخص)" },
-      { name: "datetime", label: "آخرین زمان گزارش" },
-    ],
-    securityData: [],
-    pumpData: [],
-    analogData: [],
+    data: [],
     numberOfUserDevices: 0,
   };
 
@@ -49,18 +31,11 @@ class Dashboard extends Component {
   };
 
   async componentDidMount() {
-    const {
-      pumpData,
-      securityData,
-      analogData,
-      user,
-      numberOfUserDevices,
-      usersDeviceCountData,
-    } = await init();
+    const { data, user, numberOfUserDevices, usersDeviceCountData } =
+      await init();
+
     this.setState({
-      pumpData,
-      securityData,
-      analogData,
+      data,
       user,
       numberOfUserDevices,
       usersDeviceCountData,
@@ -77,64 +52,34 @@ class Dashboard extends Component {
   render() {
     const {
       user,
-      pumpData,
-      pumpColumns,
-      analogData,
-      analogColumns,
-      securityData,
-      securityColumns,
+      columns,
+      data,
       usersDeviceCountData,
       userDeviceNumberColumns,
       numberOfUserDevices,
     } = this.state;
     return (
       <React.Fragment>
-        <section className="mb-2">
-          <div className="section-header">
-            <h1 className="section-title">{user.nickname + " خوش آمدید"}</h1>
+        <section className='mb-2'>
+          <div className='section-header'>
+            <h1 className='section-title'>{user.nickname + " خوش آمدید"}</h1>
           </div>
 
-          <div className="section-content d-flex flex-column mt-5 px-5">
+          <div className='section-content d-flex flex-column mt-5 px-5'>
             {!authData.isAdmin ? (
               <NumberOfStatistics count={numberOfUserDevices} />
             ) : (
-              <div className="px-5 text-center d-flex align-self-center">
+              <div className='px-5 text-center d-flex align-self-center'>
                 <StatisticsTable
                   data={usersDeviceCountData}
                   columns={userDeviceNumberColumns}
-                  title="تعداد دستگاه‌های کاربران"
+                  title='تعداد دستگاه‌های کاربران'
                 />
               </div>
             )}
 
-            <div className="dashboard-table-container">
-              <StatisticsTable
-                data={pumpData}
-                columns={pumpColumns}
-                title={
-                  "گزارش وضعیت روشن یا خاموش بودن موتورها / پمپ‌ها" +
-                  "\n" +
-                  " بر اساس آخرین داده‌های دریافت"
-                }
-              />
-              <StatisticsTable
-                data={securityData}
-                columns={securityColumns}
-                title={
-                  "گزارش وضعیت سیستم‌های امنیتی" +
-                  "\n" +
-                  " بر اساس آخرین داده‌های دریافت"
-                }
-              />
-              <StatisticsTable
-                data={analogData}
-                columns={analogColumns}
-                title={
-                  "جدول داده‌های آنالوگ به دیجیتال" +
-                  "\n" +
-                  " بر اساس آخرین داده‌های دریافت"
-                }
-              />
+            <div className='dashboard-table-container'>
+              <StatisticsTable data={data} columns={columns} title='' />
             </div>
           </div>
         </section>

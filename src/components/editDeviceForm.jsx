@@ -3,12 +3,15 @@ import Joi from "joi";
 import Input from "./common/input";
 import Form from "./common/form";
 import qs from "qs";
-import axios from "axios";
 import config from "./../config.json";
 import { authData } from "./../services/authServices";
 import { getErrorString } from "./utils/error-converter";
 import { withRouter } from "react-router-dom";
 import TextArea from "./common/textarea";
+import NewHardwareItem from "./newHardwareItem";
+import { v4 } from "uuid";
+import axios from "./../services/httpServices";
+import getToken from "../services/token";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditDeviceForm extends Form {
@@ -26,6 +29,7 @@ class EditDeviceForm extends Form {
     hardwareList: [],
     authData: { username: authData.username, token: authData.token },
     checkedHardware: [],
+    newHardwares: [],
   };
 
   schema = {
@@ -83,7 +87,10 @@ class EditDeviceForm extends Form {
       const hardwareOptions = {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        data: qs.stringify(this.state.authData),
+        data: qs.stringify({
+          ...this.state.authData,
+          deviceID: this.props.match.params.deviceID,
+        }),
         url: `${config.apiBaseURL}/hardwareList.php`,
       };
       const hardwareListResponse = await axios(hardwareOptions);
@@ -179,7 +186,6 @@ class EditDeviceForm extends Form {
       };
       const newDeviceResponse = await axios(newDeviceOptions);
       const { data } = newDeviceResponse;
-      console.log(newDeviceResponse);
       if (data.status) {
         window.location = `${dir}/admin/devices`;
       } else {
@@ -190,6 +196,39 @@ class EditDeviceForm extends Form {
         alert("Bad Request");
       }
       console.log(ex);
+    }
+  };
+
+  handleNewHardwareBtnClick = () => {
+    const state = { ...this.state };
+    let { newHardwares } = state;
+    newHardwares = [...newHardwares, {}];
+    state.newHardwares = newHardwares;
+    this.setState(state);
+  };
+
+  handleOnSubmitHardwareItemClick = async (item) => {
+    try {
+      const token = getToken();
+      const deviceID = this.props.match.params.deviceID;
+      const response = await axios.post(
+        "/addNewHardware.php",
+        qs.stringify({ token, ...item, deviceID })
+      );
+      console.log({ token, ...item });
+      console.log(response);
+      const { data } = response;
+      if (data.ok) {
+        const newState = { ...this.state };
+        const newHardwareList = [...newState.hardwareList];
+        newHardwareList.push(item);
+        newState.hardwareList = newHardwareList;
+        this.setState(newState);
+      } else {
+        console.log(data.errors);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -273,6 +312,22 @@ class EditDeviceForm extends Form {
             <span className='mb-3 mt-3 d-block'>
               قابلیت‌های سخت‌افزاری (
               <small>قابلیت‌های دستگاه مورد نظر را وارد نمایید</small>)
+              <button
+                type='button'
+                onClick={this.handleNewHardwareBtnClick}
+                style={{
+                  width: 30,
+                  height: 30,
+                  fontSize: 10,
+                  display: "inline-flex",
+                  marginRight: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                className='btn btn-success'
+              >
+                <i className='fa fa-plus'></i>
+              </button>
             </span>
             <div className='checkbox-container d-flex flex-column'>
               <div>
@@ -292,6 +347,21 @@ class EditDeviceForm extends Form {
                   );
                 })}
               </div>
+              {this.state.newHardwares.length > 0 ? (
+                <div
+                  className='d-flex flex-column mt-3 border border-gray rounded p-2 bg-white flex-end'
+                  style={{ rowGap: 10 }}
+                >
+                  {this.state.newHardwares.map((item, i) => (
+                    <NewHardwareItem
+                      key={`${i}${v4()}`}
+                      onSubmitHardwareItemClick={
+                        this.handleOnSubmitHardwareItemClick
+                      }
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
 
