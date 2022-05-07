@@ -14,7 +14,6 @@ const TextArea = ({
       <label htmlFor={name}>{label}</label>
       <textarea
         autoFocus={autoFocus ? true : false}
-<<<<<<< HEAD
         className='form-control'
         id={name}
         name={name}
@@ -25,18 +24,6 @@ const TextArea = ({
       />
       {error && (
         <div className='alert alert-danger mt-2'>
-=======
-        className="form-control"
-        id={name}
-        name={name}
-        onChange={onChange}
-        rows="3"
-        value={value}
-        placeholder={`${label} را وارد کنید`}
-      />
-      {error && (
-        <div className="alert alert-danger mt-2">
->>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
           <small>{error}</small>
         </div>
       )}

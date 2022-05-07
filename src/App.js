@@ -36,10 +36,6 @@ function App() {
         <Route path={`${dir}/admin`} component={AdminPanel} />
         <Route path={`${dir}/not-found`} component={NotFound} />
         <Route path={`${dir}/login`} component={Login} />
-<<<<<<< HEAD
-
-=======
->>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
         <Redirect from={`${dir}/`} exact to={`${dir}/login`} />
         <Redirect to={`${dir}/not-found`} />
       </Switch>
@@ -57,11 +53,7 @@ function App() {
   }
   return (
     <MuiThemeProvider theme={theme}>
-<<<<<<< HEAD
       <div className='App'>{routes}</div>
-=======
-      <div className="App">{routes}</div>
->>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
     </MuiThemeProvider>
   );
 }

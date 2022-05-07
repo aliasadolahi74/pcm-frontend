@@ -124,19 +124,22 @@ class Device extends Component {
       return { name: item.name, label: item.label };
     });
     columns.push({ name: "datetime", label: "زمان" });
-    columns.push({
-      name: "deleteButton",
-      label: "",
-      content: (item) => (
-        <button
-          onClick={() => this.handleDeleteButtonClick(item)}
-          className='btn btn-danger'
-          style={{ fontSize: 12 }}
-        >
-          <i className='fa fa-trash '></i>
-        </button>
-      ),
-    });
+    if (authData.isAdmin) {
+      columns.push({
+        name: "deleteButton",
+        label: "",
+        content: (item) => (
+          <button
+            onClick={() => this.handleDeleteButtonClick(item)}
+            className='btn btn-danger'
+            style={{ fontSize: 12 }}
+          >
+            <i className='fa fa-trash '></i>
+          </button>
+        ),
+      });
+    }
+
     return columns;
   };
 

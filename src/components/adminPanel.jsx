@@ -28,6 +28,7 @@ import qs from "qs";
 import SMSServiceSettings from "./smsServiceSettings";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
+const panelURL = process.env.REACT_APP_PANEL_URL;
 
 class AdminPanel extends Component {
   state = {
@@ -65,8 +66,11 @@ class AdminPanel extends Component {
       {
         id: "6",
         title: "خروج",
-        link: `${dir}/admin/logout`,
         fontAwesomeIcon: "fa-sign-out-alt",
+        action: () => {
+          localStorage.clear();
+          window.location.href = panelURL;
+        },
       },
     ],
   };

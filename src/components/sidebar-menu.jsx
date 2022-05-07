@@ -7,34 +7,53 @@ class SidebarMenu extends Component {
     const { items } = this.props;
     const websiteURL = process.env.REACT_APP_WEBSITE;
     return (
-      <aside className="sidebar">
-        <div className="title">
+      <aside className='sidebar'>
+        <div className='title'>
           <a href={websiteURL}>
-            <img src={icon} alt="logo" />
+            <img src={icon} alt='logo' />
           </a>
         </div>
-        <nav className="menu">
+        <nav className='menu'>
           <ul>
             {items.map((item) => {
               return (
                 <li
                   key={item.id}
                   onClick={() => {
-                    this.handleMenuItemClick(item);
+                    if (item.action) {
+                      item.action();
+                    } else {
+                      this.handleMenuItemClick(item);
+                    }
                   }}
                 >
-                  <NavLink
-                    to={item.link}
-                    isActive={(match) => {
-                      if (!match || item.link === "#") {
-                        return false;
-                      }
-                      return true;
-                    }}
-                  >
-                    <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
-                    {item.title}
-                  </NavLink>
+                  {item.action ? (
+                    <NavLink
+                      to={"#"}
+                      isActive={(match) => {
+                        if (!match || item.link === "#") {
+                          return false;
+                        }
+                        return true;
+                      }}
+                    >
+                      <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
+                      {item.title}
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      to={item.link}
+                      isActive={(match) => {
+                        if (!match || item.link === "#") {
+                          return false;
+                        }
+                        return true;
+                      }}
+                    >
+                      <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
+                      {item.title}
+                    </NavLink>
+                  )}
                 </li>
               );
             })}

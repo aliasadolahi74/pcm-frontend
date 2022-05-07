@@ -78,6 +78,12 @@ class Dashboard extends Component {
               </div>
             )}
 
+            {!authData.isAdmin && (data !== undefined || data.length !== 0) ? (
+              <h4 style={{ width: "100%", textAlign: "center" }}>
+                خلاصه وضعیت سیستم های شما بر اساس آخرین داده های دریافتی
+              </h4>
+            ) : null}
+
             <div className='dashboard-table-container'>
               <StatisticsTable data={data} columns={columns} title='' />
             </div>

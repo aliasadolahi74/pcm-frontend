@@ -10,10 +10,7 @@ class UserTable extends Component {
       { name: "nickname", label: "نام" },
       { name: "username", label: "نام کاربری" },
       { name: "phoneNumber", label: "شماره تماس" },
-<<<<<<< HEAD
       { name: "count", label: "تعداد دستگاه" },
-=======
->>>>>>> 56f99646e54e4149e299b6afa1c0573d508a1d4c
       { name: "datetime", label: "تاریخ ثبت‌نام" },
       {
         name: "deleteBtn",
