@@ -1,16 +1,12 @@
 import React, { Component } from "react";
 import UserDevicesTable from "./userDevicesTable";
-import { paginate } from "./utils/paginate";
-import Pagination from "./common/pagination";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import qs from "qs";
-import config from "../config.json";
 import "../services/httpServices";
 import { Link } from "react-router-dom";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "./../services/authServices";
 import AlertDialog from "./alertDialog";
-import UsersDropdown from "./usersDropdown";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class User extends Component {
@@ -35,7 +31,7 @@ class User extends Component {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       data: qs.stringify(data),
-      url: `${config.apiBaseURL}/userInfo.php`,
+      url: `/userInfo.php`,
     };
     const userInfoResponse = await axios(userInfoOptions);
 
@@ -47,7 +43,7 @@ class User extends Component {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         data: qs.stringify(data),
-        url: `${config.apiBaseURL}/userDevices.php`,
+        url: `/userDevices.php`,
       };
       const userDevicesResponse = await axios(userDevicesOptions);
       const devices = userDevicesResponse.data.body;
@@ -68,7 +64,7 @@ class User extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify(data),
-        url: `${config.apiBaseURL}/setBranch.php`,
+        url: `/setBranch.php`,
       };
       const setBranchResponse = await axios(setBranchOptions);
       console.log(setBranchResponse);
@@ -89,7 +85,7 @@ class User extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify(data),
-        url: `${config.apiBaseURL}/deleteBranch.php`,
+        url: `/deleteBranch.php`,
       };
       const setBranchResponse = await axios(setBranchOptions);
       console.log(setBranchResponse);
@@ -99,15 +95,8 @@ class User extends Component {
   };
 
   render() {
-    const {
-      devices: allDevices,
-      currentPage,
-      pageSize,
-      userInfo,
-      isAlertDialogOpen,
-      selectedDeleteButton,
-    } = this.state;
-    const devices = paginate(allDevices, currentPage, pageSize);
+    const { devices, userInfo, isAlertDialogOpen, selectedDeleteButton } =
+      this.state;
     const username = this.props.match.params.username;
     const { nickname, datetime, isAdmin, address, phoneNumber } = userInfo;
     return (
@@ -171,12 +160,6 @@ class User extends Component {
                 devices={devices}
                 onDelete={this.handleDelete}
               />
-              <Pagination
-                currentPage={currentPage}
-                itemsCount={allDevices.length}
-                onPageChange={this.handlePageChange}
-                pageSize={pageSize}
-              />
             </div>
           </section>
           <AlertDialog
@@ -215,7 +198,7 @@ class User extends Component {
           deviceID: item.deviceID,
           clientUsername: this.props.match.params.username,
         }),
-        url: `${config.apiBaseURL}/delete-device-assignment.php`,
+        url: `/delete-device-assignment.php`,
       };
 
       const deleteDeviceAssignmentResponse = await axios(options);

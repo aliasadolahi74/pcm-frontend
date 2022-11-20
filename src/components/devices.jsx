@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import Pagination from "./common/pagination";
 import DeviceTable from "./deviceTable";
-import { paginate } from "./utils/paginate";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import "../services/httpServices";
-import config from "../config.json";
 import qs from "qs";
 import "../services/httpServices";
 import { authData } from "./../services/authServices";
@@ -14,8 +11,6 @@ import AlertDialog from "./alertDialog";
 class Devices extends Component {
   state = {
     allDevices: [],
-    currentPage: 1,
-    pageSize: 10,
     authData: { username: authData.username, token: authData.token },
     isAlertDialogOpen: false,
     selectedDeleteButton: {},
@@ -27,7 +22,7 @@ class Devices extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify(this.state.authData),
-        url: `${config.apiBaseURL}/devices.php`,
+        url: `/devices.php`,
       };
       const devicesInfo = await axios(devicesOptions);
       const allDevices = devicesInfo.data.body;
@@ -48,14 +43,7 @@ class Devices extends Component {
   };
 
   render() {
-    const {
-      allDevices,
-      currentPage,
-      pageSize,
-      isAlertDialogOpen,
-      selectedDeleteButton,
-    } = this.state;
-    const devices = paginate(allDevices, currentPage, pageSize);
+    const { allDevices, isAlertDialogOpen, selectedDeleteButton } = this.state;
     return (
       <React.Fragment>
         <section className='mb-2'>
@@ -72,13 +60,7 @@ class Devices extends Component {
         </section>
         <DeviceTable
           onDeleteDeviceButtonClick={this.onDeviceDelete}
-          devices={devices}
-        />
-        <Pagination
-          itemsCount={allDevices.length}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
+          devices={allDevices}
         />
         <AlertDialog
           open={isAlertDialogOpen}
@@ -101,7 +83,7 @@ class Devices extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify({ ...this.state.authData, deviceID: item.deviceID }),
-        url: `${config.apiBaseURL}/delete-device.php`,
+        url: `/delete-device.php`,
       };
       const deleteDeviceResponse = await axios(devicesOptions);
       const { data } = deleteDeviceResponse;

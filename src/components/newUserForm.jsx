@@ -2,11 +2,9 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi";
 import Input from "./common/input";
-import "./../services/httpServices";
 import { authData } from "./../services/authServices";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import qs from "qs";
-import config from "../config.json";
 import { getErrorString } from "./utils/error-converter";
 import Dialog from "./common/dialog";
 import TextArea from "./common/textarea";
@@ -67,7 +65,7 @@ class NewUserForm extends Form {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       data: qs.stringify(serverData),
-      url: `${config.apiBaseURL}/newUser.php`,
+      url: `/newUser.php`,
     };
     const newUserResponse = await axios(newUserOptions);
     const { data: responseData } = newUserResponse;
@@ -83,74 +81,69 @@ class NewUserForm extends Form {
   };
 
   render() {
-    const {
-      data,
-      errors,
-      dialogIsVisible,
-      dialogSuccess,
-      dialogMessage,
-    } = this.state;
+    const { data, errors, dialogIsVisible, dialogSuccess, dialogMessage } =
+      this.state;
     return (
       <React.Fragment>
-        <form onSubmit={this.handleSubmit} className="d-flex flex-column px-4">
-          <div className="new-user-input-conatiner">
+        <form onSubmit={this.handleSubmit} className='d-flex flex-column px-4'>
+          <div className='new-user-input-conatiner'>
             <Input
               autoFocus
-              name="clientUsername"
-              type="text"
+              name='clientUsername'
+              type='text'
               value={data.clientUsername}
               onChange={this.handleChange}
-              label="نام کاربری"
+              label='نام کاربری'
               error={errors.clientUsername}
             />
 
             <Input
-              name="clientNickname"
-              type="text"
+              name='clientNickname'
+              type='text'
               value={data.clientNickname}
               onChange={this.handleChange}
-              label="نام"
+              label='نام'
               error={errors.clientNickname}
             />
 
             <Input
-              name="clientPassword"
-              type="password"
+              name='clientPassword'
+              type='password'
               value={data.clientPassword}
               onChange={this.handleChange}
-              label="رمز عبور"
+              label='رمز عبور'
               error={errors.clientPassword}
             />
 
             <Input
-              name="phoneNumber"
-              type="text"
+              name='phoneNumber'
+              type='text'
               value={data.phoneNumber}
               onChange={this.handleChange}
-              label="شماره تماس"
+              label='شماره تماس'
               error={errors.phoneNumber}
             />
 
             <TextArea
-              name="address"
+              name='address'
               value={data.address}
               onChange={this.handleChange}
-              label="آدرس"
+              label='آدرس'
               error={errors.address}
             />
           </div>
 
           <button
-            type="submit"
+            type='submit'
             disabled={this.validate()}
             onClick={this.handleSubmitButton}
-            className="btn btn-primary mt-2 w-25"
+            className='btn btn-primary mt-2 w-25'
           >
             ثبت کاربر جدید
           </button>
         </form>
         <Dialog
-          id="dialog"
+          id='dialog'
           isVisible={dialogIsVisible}
           onDialogEnds={this.handleOnDialogEnds}
           message={dialogMessage}

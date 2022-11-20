@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import icon from "../images/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 class SidebarMenu extends Component {
   render() {
@@ -28,7 +28,7 @@ class SidebarMenu extends Component {
                   }}
                 >
                   {item.action ? (
-                    <NavLink
+                    <Link
                       to={"#"}
                       isActive={(match) => {
                         if (!match || item.link === "#") {
@@ -39,7 +39,7 @@ class SidebarMenu extends Component {
                     >
                       <i className={"fa menu-icon " + item.fontAwesomeIcon}></i>
                       {item.title}
-                    </NavLink>
+                    </Link>
                   ) : (
                     <NavLink
                       to={item.link}

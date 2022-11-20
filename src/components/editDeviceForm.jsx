@@ -3,7 +3,6 @@ import Joi from "joi";
 import Input from "./common/input";
 import Form from "./common/form";
 import qs from "qs";
-import config from "./../config.json";
 import { authData } from "./../services/authServices";
 import { getErrorString } from "./utils/error-converter";
 import { withRouter } from "react-router-dom";
@@ -91,7 +90,7 @@ class EditDeviceForm extends Form {
           ...this.state.authData,
           deviceID: this.props.match.params.deviceID,
         }),
-        url: `${config.apiBaseURL}/hardwareList.php`,
+        url: `/hardwareList.php`,
       };
       const hardwareListResponse = await axios(hardwareOptions);
       const { data } = hardwareListResponse;
@@ -116,7 +115,7 @@ class EditDeviceForm extends Form {
           ...this.state.authData,
           deviceID: this.props.match.params.deviceID,
         }),
-        url: `${config.apiBaseURL}/getDeviceDetails.php`,
+        url: `/getDeviceDetails.php`,
       };
       const deviceDetailsResponse = await axios(deviceDetailsOptions);
       const { data: receivedData } = deviceDetailsResponse;
@@ -182,7 +181,7 @@ class EditDeviceForm extends Form {
           checkedHardware: checkedHardwareString,
           ...deviceInfo,
         }),
-        url: `${config.apiBaseURL}/updateDevice.php`,
+        url: `/updateDevice.php`,
       };
       const newDeviceResponse = await axios(newDeviceOptions);
       const { data } = newDeviceResponse;

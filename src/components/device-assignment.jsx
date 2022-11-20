@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { authData } from "./../services/authServices";
-import "./../services/httpServices";
-import axios from "axios";
-import config from "../config.json";
+import axios from "./../services/httpServices";
 import qs from "qs";
 import { getErrorString } from "./utils/error-converter";
 
@@ -25,7 +23,7 @@ class DeviceAssignment extends Component {
           method: "POST",
           headers: { "content-type": "application/x-www-form-urlencoded" },
           data: qs.stringify(authData),
-          url: `${config.apiBaseURL}/get-devices.php`,
+          url: `/get-devices.php`,
         };
         const devicesInfo = await axios(devicesOptions);
         const devices = devicesInfo.data.body;
@@ -47,7 +45,7 @@ class DeviceAssignment extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify({ ...authData, ...data, clientUsername }),
-        url: `${config.apiBaseURL}/assign-device.php`,
+        url: `/assign-device.php`,
       };
 
       const assigningDeviceResponse = await axios(options);

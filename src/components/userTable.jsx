@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Table from "./common/table";
 import { authData } from "./../services/authServices";
+import PaginatedTable from "./common/Pagination/PaginatedTable";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class UserTable extends Component {
@@ -53,7 +53,7 @@ class UserTable extends Component {
   render() {
     const { columns } = this.state;
     const { users } = this.props;
-    return <Table isCountable={true} columns={columns} data={users} />;
+    return <PaginatedTable columns={columns} data={users} />;
   }
 }
 

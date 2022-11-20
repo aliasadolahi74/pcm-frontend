@@ -3,14 +3,11 @@ import Input from "./common/input";
 import Joi from "joi";
 import Form from "./common/form";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-import config from "../config.json";
+import axios from "./../services/httpServices";
 import qs from "qs";
 import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "../services/authServices";
-import "../services/httpServices";
-const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditPasswordForm extends Form {
   state = {
@@ -47,7 +44,7 @@ class EditPasswordForm extends Form {
         ...this.state.authData,
         clientUsername,
       }),
-      url: `${config.apiBaseURL}/editPassword.php`,
+      url: `/editPassword.php`,
     };
     const editPasswordResponse = await axios(editPasswordOption);
     console.log(editPasswordResponse);

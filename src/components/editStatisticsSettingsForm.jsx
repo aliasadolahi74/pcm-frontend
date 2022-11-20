@@ -8,35 +8,32 @@ import { authData } from "../services/authServices";
 import { withRouter } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 
-class EditSMSServicePhoneNumberForm extends Form {
+class EditStatisticsSettingsForm extends Form {
   state = {
-    data: { phoneNumber: "" },
+    data: { updateInterval: "" },
     errors: {},
   };
 
   schema = {
-    phoneNumber: Joi.string().max(20).required().messages({
-      "any.required": "وارد کردن شماره الزامی است",
-      "string.empty": "وارد کردن شماره الزامی است",
-      "string.max": "اندازه شماره باید حداکثر ۲۰ رقم باشد",
-      "string.length": "اندازه شماره باید حداکثر ۲۰ رقم باشد",
+    updateInterval: Joi.string().required().messages({
+      "any.required": "وارد کردن بازه زمانی الزامی است",
+      "string.empty": "وارد کردن بازه زمانی الزامی است",
     }),
   };
 
   async componentDidMount() {
     try {
       const response = await axios.post(
-        "/getSMSServicePhoneNumber.php",
+        "/getIntervalValue.php",
         qs.stringify({
           ...authData,
         })
       );
-
       const { data } = response;
       if (data.ok) {
         const { body } = data;
         const state = { ...this.state };
-        state.data = { phoneNumber: body.phoneNumber };
+        state.data = { updateInterval: body.updateInterval };
         this.setState(state);
       } else {
         console.log(data.errors);
@@ -47,20 +44,18 @@ class EditSMSServicePhoneNumberForm extends Form {
   }
 
   doSubmit = async () => {
-    const { phoneNumber } = this.state.data;
-
+    const { updateInterval: intervalValue } = this.state.data;
     try {
       const response = await axios.post(
-        "/changeSMSServicePhoneNumber.php",
+        "/changeIntervalValue.php",
         qs.stringify({
           ...authData,
-          phoneNumber,
+          intervalValue,
         })
       );
       const { data } = response;
-      console.log(response);
       if (data.ok) {
-        toast.success("شماره با موفقیت ویرایش گردید");
+        toast.success("بازه زمانی با موفقیت ویرایش گردید");
       } else {
         toast.error(data.errors);
       }
@@ -84,12 +79,12 @@ class EditSMSServicePhoneNumberForm extends Form {
           >
             <div className='w-75'>
               <Input
-                name='phoneNumber'
+                name='updateInterval'
                 type='text'
-                value={data.phoneNumber}
+                value={data.updateInterval}
                 onChange={this.handleChange}
-                label='شماره'
-                error={errors.phoneNumber}
+                label='بازه زمانی (ثانیه)'
+                error={errors.updateInterval}
               />
             </div>
           </div>
@@ -108,4 +103,4 @@ class EditSMSServicePhoneNumberForm extends Form {
   }
 }
 
-export default withRouter(EditSMSServicePhoneNumberForm);
+export default withRouter(EditStatisticsSettingsForm);

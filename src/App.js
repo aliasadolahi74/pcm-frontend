@@ -8,8 +8,7 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import Login from "./components/login";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
-import axios from "axios";
-import config from "./config.json";
+import axios from "./services/httpServices";
 import qs from "qs";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
@@ -63,7 +62,7 @@ async function refreshToken(oldToken) {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     data: qs.stringify({ token: oldToken }),
-    url: `${config.apiBaseURL}/refresh-token.php`,
+    url: `/refresh-token.php`,
   };
   const loginInfo = await axios(loginOptions);
   if (loginInfo.data.status) {

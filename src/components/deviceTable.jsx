@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Table from "./common/table";
 import { Link } from "react-router-dom";
 import { authData } from "./../services/authServices";
+import PaginatedTable from "./common/Pagination/PaginatedTable";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
@@ -77,7 +77,7 @@ class DeviceTable extends Component {
   render() {
     const { columns } = this.state;
     const { devices } = this.props;
-    return <Table isCountable={true} columns={columns} data={devices} />;
+    return <PaginatedTable columns={columns} data={devices} />;
   }
 }
 

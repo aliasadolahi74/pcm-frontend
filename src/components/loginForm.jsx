@@ -3,8 +3,7 @@ import Input from "./common/input";
 import Joi from "joi";
 import Form from "./common/form";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-import config from "../config.json";
+import axios from "./../services/httpServices";
 import qs from "qs";
 import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
@@ -41,7 +40,7 @@ class LoginForm extends Form {
         "content-type": "application/x-www-form-urlencoded",
       },
       data: qs.stringify(this.state.data),
-      url: `${config.apiBaseURL}/login.php`,
+      url: `/login.php`,
     };
     const loginInfo = await axios(loginOptions);
     const status = loginInfo.data.status;

@@ -1,8 +1,6 @@
 import jwtDecode from "jwt-decode";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import qs from "qs";
-import "./httpServices";
-import config from "../config.json";
 import { authData } from "./authServices";
 
 async function init() {
@@ -25,6 +23,8 @@ async function init() {
         const hardwareStatus = hardwareStatusResponse.data.body;
         returnData.numberOfUserDevices =
           hardwareStatusResponse.data.deviceCount;
+        returnData.interval = hardwareStatusResponse.data.interval;
+
         const data = [];
 
         hardwareStatus.forEach((item, index) => {
@@ -55,6 +55,7 @@ async function init() {
     returnData.data = [];
 
     returnData.numberOfUserDevices = 0;
+
     const { data: resonseData } = await axios.post(
       "/userDeviceCount.php",
       qs.stringify({

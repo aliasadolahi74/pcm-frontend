@@ -15,6 +15,7 @@ class Dashboard extends Component {
       { name: "controlFaze", label: "وضعیت کنترل فاز" },
       { name: "pump", label: "وضعیت موتور" },
       { name: "datetime", label: "آخرین زمان گزارش" },
+      { name: "icon", label: "" },
     ],
     userDeviceNumberColumns: [
       { name: "nickname", label: "نام کاربر" },
@@ -22,23 +23,40 @@ class Dashboard extends Component {
     ],
     data: [],
     numberOfUserDevices: 0,
+    updateInterval: null,
   };
 
-  tick = () => {
-    const refreshes = this.state.refreshes;
-    console.log(refreshes);
-    this.setState({ refreshes: refreshes + 1 });
+  tick = async () => {
+    try {
+      const { data, user, numberOfUserDevices, usersDeviceCountData } =
+        await init();
+      this.setState((state) => ({
+        data,
+        user,
+        numberOfUserDevices,
+        usersDeviceCountData,
+      }));
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState((state) => ({ ...state, refreshes: state.refreshes + 1 }));
   };
 
   async componentDidMount() {
-    const { data, user, numberOfUserDevices, usersDeviceCountData } =
-      await init();
+    const {
+      data,
+      user,
+      numberOfUserDevices,
+      usersDeviceCountData,
+      interval: updateInterval,
+    } = await init();
 
     this.setState({
       data,
       user,
       numberOfUserDevices,
       usersDeviceCountData,
+      updateInterval,
     });
     this.interval = setInterval(() => {
       this.tick();
@@ -85,7 +103,12 @@ class Dashboard extends Component {
             ) : null}
 
             <div className='dashboard-table-container'>
-              <StatisticsTable data={data} columns={columns} title='' />
+              <StatisticsTable
+                updateInterval={this.state.updateInterval}
+                data={data}
+                columns={columns}
+                title=''
+              />
             </div>
           </div>
         </section>

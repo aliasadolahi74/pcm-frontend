@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import HardwareModule from "./hardwareModule";
 import "../services/httpServices";
-import config from "../config.json";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "./../services/authServices";
 import ReportTable from "./reportTable";
-import { paginate } from "./utils/paginate";
-import Pagination from "./common/pagination";
 import { DatePicker } from "jalali-react-datepicker";
 import { filterDatetime } from "./utils/filter";
 import { Link } from "react-router-dom";
@@ -38,7 +35,7 @@ class Device extends Component {
         deviceID: this.props.match.params.deviceID,
         ...authData,
       }),
-      url: `${config.apiBaseURL}/deviceHardwareList.php`,
+      url: `/deviceHardwareList.php`,
     };
 
     const hardwareListResponse = await axios(deviceHardwareOptions);
@@ -59,7 +56,7 @@ class Device extends Component {
         deviceID: this.props.match.params.deviceID,
         ...authData,
       }),
-      url: `${config.apiBaseURL}/deviceInfo.php`,
+      url: `/deviceInfo.php`,
     };
 
     const { data } = await axios(deviceInfoOption);
@@ -76,7 +73,7 @@ class Device extends Component {
         deviceID: this.props.match.params.deviceID,
         ...authData,
       }),
-      url: `${config.apiBaseURL}/getDeviceReports.php`,
+      url: `/getDeviceReports.php`,
     };
 
     const deviceReportResponse = await axios(deviceReportOptions);
@@ -163,8 +160,6 @@ class Device extends Component {
       hardwareModules,
       allReportData,
       columns,
-      pageSize,
-      currentPage,
       filterStartDate,
       filterEndDate,
       deviceName,
@@ -182,8 +177,7 @@ class Device extends Component {
     } else {
       conditionedData = allReportData;
     }
-    const reportData = paginate(conditionedData, currentPage, pageSize);
-    console.log("reportData", reportData);
+
     return (
       <div className='device-info-container'>
         <Toaster />
@@ -191,7 +185,6 @@ class Device extends Component {
         <h6 className='mt-3 mb-5'>{address}</h6>
         <h6 className='mt-3 mb-5'>{description}</h6>
         <div className='button-container'>
-          {console.log("modules", hardwareModules)}
           {hardwareModules.map((item) => {
             return (
               <HardwareModule
@@ -238,13 +231,7 @@ class Device extends Component {
             </button>
           </div>
           <div className='report-content'>
-            <ReportTable columns={columns} data={reportData} />
-            <Pagination
-              itemsCount={conditionedData.length}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onPageChange={this.handlePageChange}
-            />
+            <ReportTable columns={columns} data={conditionedData} />
           </div>
         </div>
       </div>
@@ -291,7 +278,7 @@ class Device extends Component {
         deviceID: this.deviceID,
         command: textSMS,
       }),
-      url: `${config.apiBaseURL}/command.php`,
+      url: `/command.php`,
     };
 
     const response = await axios(options);

@@ -3,13 +3,11 @@ import Input from "./common/input";
 import Joi from "joi";
 import Form from "./common/form";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-import config from "../config.json";
 import qs from "qs";
 import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
 import { authData } from "../services/authServices";
-import "../services/httpServices";
+import axios from "./../services/httpServices";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class EditNicknameForm extends Form {
@@ -48,7 +46,7 @@ class EditNicknameForm extends Form {
         ...this.state.authData,
         clientUsername,
       }),
-      url: `${config.apiBaseURL}/editNickname.php`,
+      url: `/editNickname.php`,
     };
     const editNicknameResponse = await axios(editNicknameOption);
     console.log(editNicknameResponse);
@@ -65,38 +63,33 @@ class EditNicknameForm extends Form {
   };
 
   render() {
-    const {
-      data,
-      errors,
-      dialogIsVisible,
-      dialogMessage,
-      dialogSuccess,
-    } = this.state;
+    const { data, errors, dialogIsVisible, dialogMessage, dialogSuccess } =
+      this.state;
     return (
       <React.Fragment>
         <form
           onSubmit={this.handleSubmit}
-          className="d-flex flex-column w-25 px-4"
+          className='d-flex flex-column w-25 px-4'
         >
           <Input
-            name="clientNickname"
-            type="text"
+            name='clientNickname'
+            type='text'
             value={data.clientNickname}
             onChange={this.handleChange}
-            label="نام"
+            label='نام'
             error={errors.clientNickname}
           />
           <button
-            type="submit"
+            type='submit'
             disabled={this.validate()}
             onClick={this.handleSubmitButton}
-            className="btn btn-primary mt-2"
+            className='btn btn-primary mt-2'
           >
             ویرایش نام
           </button>
         </form>
         <Dialog
-          id="dialog"
+          id='dialog'
           isVisible={dialogIsVisible}
           onDialogEnds={this.handleOnDialogEnds}
           message={dialogMessage}

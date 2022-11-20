@@ -1,10 +1,8 @@
 import React from "react";
-import classes from "./pagination.module.css";
+import classes from "./Pagination.module.css";
 
-const Pagination = (props) => {
-  const { currentPage, onPageChange: onPageNumberClick, itemsCount } = props;
-
-  const numberOfPages = Math.ceil(itemsCount / 5);
+const PaginationBar = (props) => {
+  const { currentPage, onPageNumberClick, numberOfPages } = props;
 
   const arr = new Array(numberOfPages);
   const PAGE_NUMBER_LIMIT = 5;
@@ -37,7 +35,6 @@ const Pagination = (props) => {
         }
         pagination.push(
           <span
-            key={i}
             onClick={() => onPageNumberClick(i)}
             className={classArr.join(" ")}
           >
@@ -58,7 +55,6 @@ const Pagination = (props) => {
       }
       pagination.push(
         <span
-          key={i}
           onClick={() => onPageNumberClick(i)}
           className={classArr.join(" ")}
         >
@@ -73,7 +69,7 @@ const Pagination = (props) => {
     <div className={classes.PaginationBarContainer}>
       {currentPage > 1 ? (
         <span
-          key='first'
+          key='firstItem'
           onClick={() => onPageNumberClick(1)}
           className={classes.PaginationBarItem}
         >
@@ -85,7 +81,7 @@ const Pagination = (props) => {
 
       {currentPage < numberOfPages ? (
         <span
-          key='last'
+          key='lastItem'
           onClick={() => onPageNumberClick(numberOfPages)}
           className={classes.PaginationBarItem}
         >
@@ -96,4 +92,4 @@ const Pagination = (props) => {
   );
 };
 
-export default Pagination;
+export default PaginationBar;

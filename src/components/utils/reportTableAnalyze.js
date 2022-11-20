@@ -1,4 +1,10 @@
 import JDate from "jalali-date";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircle,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 const itemValue = {
   bimetal: [
@@ -9,10 +15,6 @@ const itemValue = {
     { key: "0", value: "قطع" },
     { key: "1", value: "وصل" },
     { key: "2", value: "ندارد" },
-  ],
-  controlFaze: [
-    { key: "0", value: "قطع" },
-    { key: "1", value: "وصل" },
   ],
   detector: [
     { key: "0", value: "تحریک نشده" },
@@ -38,12 +40,72 @@ const itemValue = {
     { key: "1", value: "تحریک شده" },
   ],
   pump: [
-    { key: "0", value: "خاموش" },
-    { key: "1", value: "روشن" },
+    {
+      key: "0",
+      value: (
+        <div
+          style={{
+            color: "red",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>خاموش</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
+    {
+      key: "1",
+      value: (
+        <div
+          style={{
+            color: "blue",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>روشن</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
   ],
-  engine: [
-    { key: "0", value: "خاموش" },
-    { key: "1", value: "روشن" },
+  controlFaze: [
+    {
+      key: "0",
+      value: (
+        <div
+          style={{
+            color: "red",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>قطع</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
+    {
+      key: "1",
+      value: (
+        <div
+          style={{
+            color: "blue",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>وصل</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
   ],
   faze1: [
     { key: "0", value: "قطع" },
@@ -77,9 +139,54 @@ const itemValue = {
     { key: "1", value: "تحریک شده" },
   ],
   security: [
-    { key: "0", value: "غیرفعال" },
-    { key: "1", value: "فعال" },
-    { key: "2", value: "هشدار" },
+    {
+      key: "0",
+      value: (
+        <div
+          style={{
+            color: "orange",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>غیرفعال</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
+    {
+      key: "1",
+      value: (
+        <div
+          style={{
+            color: "blue",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>فعال</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      value: (
+        <div
+          style={{
+            color: "red",
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 5,
+          }}
+        >
+          <span>هشدار</span>
+          <FontAwesomeIcon icon={faCircle} />
+        </div>
+      ),
+    },
     { key: "3", value: "خطا" },
   ],
   transSensor: [
@@ -88,7 +195,7 @@ const itemValue = {
   ],
 };
 
-export function analyze(array) {
+export function analyze(array, updateInterval = null) {
   const result = [];
   for (let i = 0; i < array.length; i++) {
     const item = array[i];
@@ -97,12 +204,24 @@ export function analyze(array) {
     item.datetime = `${jdate.format("YYYY/MM/DD")} ${date.toLocaleTimeString(
       "en-GB"
     )}`;
+    if (updateInterval !== null) {
+      const diffInMiliSeconds = Date.now() - date.getTime();
+      const diffInSeconds = diffInMiliSeconds / 1000;
+      if (diffInSeconds > updateInterval) {
+        item.icon = (
+          <span style={{ color: "orange" }}>
+            <FontAwesomeIcon icon={faTriangleExclamation} />
+          </span>
+        );
+      }
+    }
     for (const [key, value] of Object.entries(item)) {
       if (key !== "analog1" && key !== "analog2" && key !== "analog3") {
         const reportStatusLabelArray = itemValue[key];
         if (reportStatusLabelArray) {
           reportStatusLabelArray.forEach((status) => {
-            if (status.key === value) {
+            /* eslint eqeqeq: 0 */
+            if (status.key == value) {
               item[key] = status.value;
             }
           });

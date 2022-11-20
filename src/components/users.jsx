@@ -1,21 +1,16 @@
 import React, { Component } from "react";
 import UserTable from "./userTable";
-import Pagination from "./common/pagination";
-import { paginate } from "./utils/paginate";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import qs from "qs";
 import "../services/httpServices";
 import { authData } from "../services/authServices";
-import config from "../config.json";
 import { getErrorString } from "./utils/error-converter";
 import AlertDialog from "./alertDialog";
 
 class Users extends Component {
   state = {
-    currentPage: 1,
-    pageSize: 10,
-    allUsers: [],
+    users: [],
     isAlertDialogOpen: false,
     selectedDeleteButton: {},
     authData: { username: authData.username, token: authData.token },
@@ -27,7 +22,7 @@ class Users extends Component {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify(authData),
-        url: `${config.apiBaseURL}/users.php`,
+        url: `/users.php`,
       };
       const usersInfo = await axios(loginOptions);
       const errors = usersInfo.data.errors;
@@ -35,9 +30,8 @@ class Users extends Component {
       if (errors) {
         alert(errors[0].message);
       } else {
-        const allUsers = usersInfo.data.body || [];
-        console.log(allUsers);
-        this.setState({ allUsers });
+        const users = usersInfo.data.body || [];
+        this.setState({ users });
       }
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
@@ -55,22 +49,15 @@ class Users extends Component {
   };
 
   render() {
-    const {
-      allUsers,
-      currentPage,
-      pageSize,
-      isAlertDialogOpen,
-      selectedDeleteButton,
-    } = this.state;
-    const users = paginate(allUsers, currentPage, pageSize);
+    const { users, isAlertDialogOpen, selectedDeleteButton } = this.state;
     return (
       <React.Fragment>
-        <section className="mb-2">
-          <div className="section-header">
-            <h1 className="section-title">کاربران</h1>
-            <div className="button-container">
-              <Link className="btn btn-success" to="./new-user">
-                <i className="fa fa-user-plus"></i>
+        <section className='mb-2'>
+          <div className='section-header'>
+            <h1 className='section-title'>کاربران</h1>
+            <div className='button-container'>
+              <Link className='btn btn-success' to='./new-user'>
+                <i className='fa fa-user-plus'></i>
               </Link>
             </div>
           </div>
@@ -79,17 +66,11 @@ class Users extends Component {
           users={users}
           onDeleteDeviceButtonClick={this.onUserDelete}
         />
-        <Pagination
-          itemsCount={allUsers.length}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-        />
         <AlertDialog
           open={isAlertDialogOpen}
           onClose={this.handleAlertDialogClose}
-          title="حذف کاربر"
-          message="آیا میخواهید این کاربر را حذف کنید؟"
+          title='حذف کاربر'
+          message='آیا میخواهید این کاربر را حذف کنید؟'
           onYesClick={() => this.handleYesClick(selectedDeleteButton)}
         />
       </React.Fragment>
@@ -113,7 +94,7 @@ class Users extends Component {
           ...this.state.authData,
           clientUsername: item.username,
         }),
-        url: `${config.apiBaseURL}/delete-user.php`,
+        url: `/delete-user.php`,
       };
       const { data } = await axios(userDeleteOptions);
       if (data.status) {

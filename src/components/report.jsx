@@ -1,50 +1,53 @@
 import React, { Component } from "react";
 import { DatePicker } from "jalali-react-datepicker";
 import { authData } from "../services/authServices";
-import axios from "axios";
+import axios from "./../services/httpServices";
 import qs from "qs";
-import "../services/httpServices";
-import config from "../config.json";
 
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
+const startDate = new Date();
+startDate.setHours(0, 0, 0, 0);
+const endDate = new Date();
+endDate.setHours(23, 59, 59, 999);
 class Report extends Component {
   state = {
-    filterStartDate: "",
-    filterEndDate: "",
+    filterStartDate: startDate.getTime(),
+    filterEndDate: endDate.getTime(),
   };
   render() {
     return (
       <React.Fragment>
-        <section className="mb-5">
-          <div className="section-header">
-            <h1 className="section-title">دریافت گزارش</h1>
+        <section className='mb-5'>
+          <div className='section-header'>
+            <h1 className='section-title'>دریافت گزارش</h1>
           </div>
         </section>
         <section>
           <form
             onSubmit={this.handleSubmit}
-            className="d-flex flex-column w-25 px-4 align-items-center"
+            className='d-flex flex-column w-25 px-4 align-items-center'
           >
-            <div className="mb-3">
+            <div className='mb-3'>
               <DatePicker
                 onClickSubmitButton={this.handleOnStartDateClick}
-                label="از تاریخ: "
-                className="align-self-center"
+                label='از تاریخ: '
+                className='align-self-center'
                 timePicker={false}
               />
             </div>
 
-            <div className="mb-3">
+            <div className='mb-3'>
               <DatePicker
                 onClickSubmitButton={this.handleOnEndDateClick}
-                label="تا تاریخ: "
+                label='تا تاریخ: '
                 timePicker={false}
               />
             </div>
 
             <button
-              type="submit"
+              type='submit'
               onClick={this.handleSubmit}
-              className="btn btn-primary mt-2 w-50"
+              className='btn btn-primary mt-2 w-50'
             >
               دانلود گزارش
             </button>
@@ -65,16 +68,14 @@ class Report extends Component {
         deviceID: deviceID,
         ...authData,
       }),
-      url: `${config.apiBaseURL}/download-report.php`,
+      url: `/download-report.php`,
     };
 
     const downloadResponse = await axios(downloadOptions);
-    console.log(downloadResponse);
     if (downloadResponse.data.status) {
       const downloadToken = downloadResponse.data.body["download-token"];
-      window.open(
-        `${config.apiBaseURL}/download.php?token=${downloadToken}&deviceID=${deviceID}&startDatetime=${filterStartDate}&endDatetime=${filterEndDate}`
-      );
+      const url = `${apiEndpoint}/download.php?token=${downloadToken}&deviceID=${deviceID}&startDatetime=${filterStartDate}&endDatetime=${filterEndDate}`;
+      window.open(url);
     }
   };
 

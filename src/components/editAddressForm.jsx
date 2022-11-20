@@ -2,8 +2,7 @@ import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-import config from "../config.json";
+import axios from "./../services/httpServices";
 import qs from "qs";
 import Dialog from "./common/dialog";
 import { getErrorString } from "./utils/error-converter";
@@ -48,7 +47,7 @@ class EditAddressForm extends Form {
         ...this.state.authData,
         clientUsername,
       }),
-      url: `${config.apiBaseURL}/editAddress.php`,
+      url: `/editAddress.php`,
     };
     const editAddressResponse = await axios(editAddressOption);
     const status = editAddressResponse.data.status;
@@ -64,37 +63,32 @@ class EditAddressForm extends Form {
   };
 
   render() {
-    const {
-      data,
-      errors,
-      dialogIsVisible,
-      dialogMessage,
-      dialogSuccess,
-    } = this.state;
+    const { data, errors, dialogIsVisible, dialogMessage, dialogSuccess } =
+      this.state;
     return (
       <React.Fragment>
         <form
           onSubmit={this.handleSubmit}
-          className="d-flex flex-column w-25 px-4"
+          className='d-flex flex-column w-25 px-4'
         >
           <TextArea
-            name="clientAddress"
+            name='clientAddress'
             value={data.clientAddress}
             onChange={this.handleChange}
-            label="آدرس"
+            label='آدرس'
             error={errors.clientAddress}
           />
           <button
-            type="submit"
+            type='submit'
             disabled={this.validate()}
             onClick={this.handleSubmitButton}
-            className="btn btn-primary mt-2"
+            className='btn btn-primary mt-2'
           >
             ویرایش آدرس
           </button>
         </form>
         <Dialog
-          id="dialog"
+          id='dialog'
           isVisible={dialogIsVisible}
           onDialogEnds={this.handleOnDialogEnds}
           message={dialogMessage}

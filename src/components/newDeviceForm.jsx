@@ -3,8 +3,7 @@ import Joi from "joi";
 import Input from "./common/input";
 import Form from "./common/form";
 import qs from "qs";
-import axios from "axios";
-import config from "./../config.json";
+import axios from "./../services/httpServices";
 import { authData } from "./../services/authServices";
 import { getErrorString } from "./utils/error-converter";
 import TextArea from "./common/textarea";
@@ -78,7 +77,7 @@ class NewDeviceForm extends Form {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify({ ...this.state.authData }),
-        url: `${config.apiBaseURL}/hardwareList.php`,
+        url: `/hardwareList.php`,
       };
       const hardwareListResponse = await axios(hardwareOptions);
       const { data } = hardwareListResponse;
@@ -124,7 +123,7 @@ class NewDeviceForm extends Form {
           checkedHardware: checkedHardwareString,
           ...deviceInfo,
         }),
-        url: `${config.apiBaseURL}/newDevice.php`,
+        url: `/newDevice.php`,
       };
       const newDeviceResponse = await axios(newDeviceOptions);
       const { data } = newDeviceResponse;

@@ -22,70 +22,90 @@ import Print from "./print";
 import EditPhoneNumber from "./editPhoneNumber";
 import EditAddress from "./editAddress";
 import jwtDecode from "jwt-decode";
-import axios from "axios";
-import config from "../config.json";
 import qs from "qs";
 import SMSServiceSettings from "./smsServiceSettings";
+import axios from "./../services/httpServices";
+import StatisticsSettings from "./statisticsSettings";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 const panelURL = process.env.REACT_APP_PANEL_URL;
 
+const adminMenu = [
+  {
+    id: "1",
+    title: "داشبورد",
+    link: `${dir}/admin/dashboard`,
+    fontAwesomeIcon: "fa-database",
+  },
+  {
+    id: "2",
+    title: "کاربران",
+    link: `${dir}/admin/users`,
+    fontAwesomeIcon: "fa-users",
+  },
+  {
+    id: "3",
+    title: "دستگاه‌ها",
+    link: `${dir}/admin/devices`,
+    fontAwesomeIcon: "fa-hdd",
+  },
+  {
+    id: "4",
+    title: "سرویس پیامکی",
+    link: `${dir}/admin/sms-settings`,
+    fontAwesomeIcon: "fa-sms",
+  },
+  {
+    id: "5",
+    title: "تنظیمات آماری",
+    link: `${dir}/admin/statistics-settings`,
+    fontAwesomeIcon: "fa-clock",
+  },
+  {
+    id: "6",
+    title: "خروج",
+    fontAwesomeIcon: "fa-sign-out-alt",
+    action: () => {
+      localStorage.clear();
+      window.location.href = panelURL;
+    },
+  },
+];
+
+const clientMenu = [
+  {
+    id: "1",
+    title: "داشبورد",
+    link: `${dir}/admin/dashboard`,
+    fontAwesomeIcon: "fa-database",
+  },
+  {
+    id: "3",
+    title: "دستگاه‌ها",
+    link: `${dir}/admin/devices`,
+    fontAwesomeIcon: "fa-hdd",
+  },
+  {
+    id: "5",
+    title: "پشتیبانی",
+    link: `${dir}/admin/support`,
+    fontAwesomeIcon: "fa-headset",
+  },
+  {
+    id: "6",
+    title: "خروج",
+    fontAwesomeIcon: "fa-sign-out-alt",
+    action: () => {
+      localStorage.clear();
+      window.location.href = panelURL;
+    },
+  },
+];
+
 class AdminPanel extends Component {
   state = {
-    sidebarItems: [
-      {
-        id: "1",
-        title: "داشبورد",
-        link: `${dir}/admin/dashboard`,
-        fontAwesomeIcon: "fa-database",
-      },
-      {
-        id: "2",
-        title: "کاربران",
-        link: `${dir}/admin/users`,
-        fontAwesomeIcon: "fa-users",
-      },
-      {
-        id: "3",
-        title: "دستگاه‌ها",
-        link: `${dir}/admin/devices`,
-        fontAwesomeIcon: "fa-hdd",
-      },
-      {
-        id: "4",
-        title: "سرویس پیامکی",
-        link: `${dir}/admin/sms-settings`,
-        fontAwesomeIcon: "fa-sms",
-      },
-      {
-        id: "5",
-        title: "پشتیبانی",
-        link: `${dir}/admin/support`,
-        fontAwesomeIcon: "fa-headset",
-      },
-      {
-        id: "6",
-        title: "خروج",
-        fontAwesomeIcon: "fa-sign-out-alt",
-        action: () => {
-          localStorage.clear();
-          window.location.href = panelURL;
-        },
-      },
-    ],
+    sidebarItems: authData.isAdmin ? adminMenu : clientMenu,
   };
-
-  componentDidMount() {
-    var sidebarItems;
-    if (!authData.isAdmin) {
-      sidebarItems = this.state.sidebarItems.filter(
-        (item) => item.id !== "2" && item.id !== "4"
-      );
-    } else {
-      sidebarItems = this.state.sidebarItems.filter((item) => item.id !== "5");
-    }
-    this.setState({ sidebarItems });
-  }
 
   render() {
     const sidebarItems = this.state.sidebarItems;
@@ -109,6 +129,10 @@ class AdminPanel extends Component {
           <Route
             path={`${dir}/admin/sms-settings`}
             component={SMSServiceSettings}
+          />
+          <Route
+            path={`${dir}/admin/statistics-settings`}
+            component={StatisticsSettings}
           />
           <Route
             path={`${dir}/admin/edit-device/:deviceID`}
@@ -179,7 +203,7 @@ async function refreshToken(oldToken) {
       "content-type": "application/x-www-form-urlencoded",
     },
     data: qs.stringify({ token: oldToken }),
-    url: `${config.apiBaseURL}/refresh-token.php`,
+    url: `/refresh-token.php`,
   };
   const loginInfo = await axios(loginOptions);
   const token = loginInfo.data.body.token;
