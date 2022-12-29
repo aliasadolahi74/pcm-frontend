@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import icon from "../images/logo.png";
+import icon from "../images/logo.jpg";
 import { NavLink, Link } from "react-router-dom";
 
 class SidebarMenu extends Component {

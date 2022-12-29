@@ -1,6 +1,7 @@
 import JDate from "jalali-date";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import _ from "lodash";
 import {
   faCircle,
   faTriangleExclamation,
@@ -200,10 +201,14 @@ export function analyze(array, updateInterval = null) {
   for (let i = 0; i < array.length; i++) {
     const item = array[i];
     const date = new Date(Date.parse(item.datetime));
+    if (item.controlFaze === "0") {
+      item.hasBeep = true;
+    }
     const jdate = new JDate(date);
     item.datetime = `${jdate.format("YYYY/MM/DD")} ${date.toLocaleTimeString(
       "en-GB"
     )}`;
+    item.englishDatetime = date;
     if (updateInterval !== null) {
       const diffInMiliSeconds = Date.now() - date.getTime();
       const diffInSeconds = diffInMiliSeconds / 1000;
@@ -213,6 +218,7 @@ export function analyze(array, updateInterval = null) {
             <FontAwesomeIcon icon={faTriangleExclamation} />
           </span>
         );
+        item.hasAlert = true;
       }
     }
     for (const [key, value] of Object.entries(item)) {

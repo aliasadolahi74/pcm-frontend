@@ -11,6 +11,7 @@ import qs from "qs";
 import getToken from "./../services/token";
 import axios from "./../services/httpServices";
 import { Toaster, toast } from "react-hot-toast";
+import { LoadingOverlay } from "@mantine/core";
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 
 class Device extends Component {
@@ -23,6 +24,12 @@ class Device extends Component {
     pageSize: 15,
     filterStartDate: "",
     filterEndDate: "",
+    pumpType: "",
+    watt: "",
+    current: "",
+    guard: "",
+    message: "",
+    loadingVisible: true,
   };
 
   deviceID = this.props.match.params.deviceID;
@@ -62,8 +69,26 @@ class Device extends Component {
     const { data } = await axios(deviceInfoOption);
     if (data.status) {
       const { body } = data;
-      const { deviceName, description, address } = body;
-      this.setState({ deviceName, description, address });
+      const {
+        deviceName,
+        description,
+        address,
+        pumpType,
+        watt,
+        current,
+        guard,
+        message,
+      } = body;
+      this.setState({
+        deviceName,
+        description,
+        address,
+        pumpType,
+        watt,
+        current,
+        guard,
+        message,
+      });
     }
 
     const deviceReportOptions = {
@@ -83,9 +108,17 @@ class Device extends Component {
       if (deviceReportArray.length > 0) {
         const columns = this.updateColumnsFromReport(deviceReportArray[0]);
         const reportData = this.updateDataFromReport(deviceReportArray);
-        this.setState({ columns, allReportData: reportData });
+        this.setState({
+          columns,
+          allReportData: reportData,
+          loadingVisible: false,
+        });
       }
     }
+    this.setState({
+      ...this.state,
+      loadingVisible: false,
+    });
   }
 
   handleDeleteButtonClick = async (item) => {
@@ -165,6 +198,11 @@ class Device extends Component {
       deviceName,
       description,
       address,
+      pumpType,
+      watt,
+      current,
+      guard,
+      message,
     } = this.state;
 
     let conditionedData = {};
@@ -180,10 +218,16 @@ class Device extends Component {
 
     return (
       <div className='device-info-container'>
+        <LoadingOverlay visible={this.state.loadingVisible} />
         <Toaster />
         <h1>{deviceName}</h1>
         <h6 className='mt-3 mb-5'>{address}</h6>
-        <h6 className='mt-3 mb-5'>{description}</h6>
+        <h6 className='mt-1'>توضیحات: {description}</h6>
+        {pumpType ? <h6>نوع پمپ: {pumpType}</h6> : null}
+        {guard ? <h6>نگهبان: {guard}</h6> : null}
+        {watt ? <h6>توان: {watt}</h6> : null}
+        {current ? <h6>شدت جریان: {current}</h6> : null}
+        {message ? <h6 className='mb-5'>پیام: {message}</h6> : null}
         <div className='button-container'>
           {hardwareModules.map((item) => {
             return (

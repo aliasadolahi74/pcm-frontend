@@ -51,12 +51,7 @@ class NewUserForm extends Form {
         "string.empty": "وارد کردن شماره تماس الزامی است",
         "string.pattern.base": "شماره تماس باید فقط عدد باشد",
       }),
-    address: Joi.string()
-      .regex(/^[، آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+\d]+$/s)
-      .messages({
-        "string.pattern.base":
-          "آدرس باید فارسی باشد. استفاده از کارکترهایی بجز - و ، غیرمجاز است",
-      }),
+    address: Joi.string().allow("", null),
   };
 
   doSubmit = async () => {

@@ -19,6 +19,10 @@ class NewDeviceForm extends Form {
       description: "",
       installationDatetime: "",
       type: "",
+      pumpType: "",
+      watt: "",
+      current: "",
+      guard: "",
     },
     errors: {},
     hardwareList: [],
@@ -68,6 +72,51 @@ class NewDeviceForm extends Form {
       .allow("", null)
       .messages({
         "string.pattern.base": "تاریخ نصب دارای کارکتر غیرمجاز است",
+      }),
+
+    pumpType: Joi.string()
+      .regex(
+        /^[A-Za-z0-9، ـ@#$%^*()+آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+.\-\d]+$/s
+      )
+      .allow("", null)
+      .messages({
+        "string.pattern.base": "نوع پمپ دارای کارکتر غیرمجاز است",
+      }),
+
+    guard: Joi.string()
+      .regex(
+        /^[A-Za-z0-9، ـ@#$%^*()+آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+.\-\d]+$/s
+      )
+      .allow("", null)
+      .messages({
+        "string.pattern.base": "نگهبان دارای کارکتر غیرمجاز است",
+      }),
+
+    watt: Joi.string()
+      .regex(
+        /^[A-Za-z0-9، ـ@#$%^*()+آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+.\-\d]+$/s
+      )
+      .allow("", null)
+      .messages({
+        "string.pattern.base": "توان دارای کارکتر غیرمجاز است",
+      }),
+
+    current: Joi.string()
+      .regex(
+        /^[A-Za-z0-9، ـ@#$%^*()+آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+.\-\d]+$/s
+      )
+      .allow("", null)
+      .messages({
+        "string.pattern.base": "جریان دارای کارکتر غیرمجاز است",
+      }),
+
+    depth: Joi.string()
+      .regex(
+        /^[A-Za-z0-9، ـ@#$%^*()+آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئج+.\-\d]+$/s
+      )
+      .allow("", null)
+      .messages({
+        "string.pattern.base": "عمق چاه دارای کارکتر غیرمجاز است",
       }),
   };
 
@@ -222,6 +271,61 @@ class NewDeviceForm extends Form {
                 onChange={this.handleChange}
                 label='نوع دستگاه'
                 error={errors.type}
+              />
+            </div>
+
+            <div className='w-75'>
+              <TextArea
+                name='pumpType'
+                type='text'
+                value={data.pumpType}
+                onChange={this.handleChange}
+                label='نوع پمپ'
+                error={errors.pumpType}
+              />
+            </div>
+
+            <div className='w-75'>
+              <TextArea
+                name='guard'
+                type='text'
+                value={data.guard}
+                onChange={this.handleChange}
+                label='نگهبان'
+                error={errors.guard}
+              />
+            </div>
+
+            <div className='w-75'>
+              <TextArea
+                name='watt'
+                type='text'
+                value={data.watt}
+                onChange={this.handleChange}
+                label='توان'
+                error={errors.watt}
+              />
+            </div>
+
+            <div className='w-75'>
+              <TextArea
+                name='current'
+                type='text'
+                value={data.current}
+                onChange={this.handleChange}
+                label='شدت جریان'
+                error={errors.current}
+              />
+            </div>
+
+            <div className='w-75'>
+              <TextArea
+                name='depth'
+                type='text'
+                value={data.depth}
+                onChange={this.handleChange}
+                label='عمق چاه'
+                error={errors.depth}
               />
             </div>
           </div>

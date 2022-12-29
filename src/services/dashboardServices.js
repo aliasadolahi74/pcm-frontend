@@ -24,6 +24,7 @@ async function init() {
         returnData.numberOfUserDevices =
           hardwareStatusResponse.data.deviceCount;
         returnData.interval = hardwareStatusResponse.data.interval;
+        returnData.messageForUser = hardwareStatusResponse.data.messageForUser;
 
         const data = [];
 
@@ -35,15 +36,18 @@ async function init() {
             pump,
             security,
             deviceID,
+            message,
           } = item;
 
           data.push({
             deviceName,
             datetime,
+            deviceID,
             key: deviceID + index,
             controlFaze,
             pump,
             security,
+            message,
           });
         });
         returnData.data = data;

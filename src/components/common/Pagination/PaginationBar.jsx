@@ -1,8 +1,11 @@
+import { Button, Input } from "@mantine/core";
 import React from "react";
+import { useRef } from "react";
 import classes from "./Pagination.module.css";
 
 const PaginationBar = (props) => {
   const { currentPage, onPageNumberClick, numberOfPages } = props;
+  const pageNumberRef = useRef();
 
   const arr = new Array(numberOfPages);
   const PAGE_NUMBER_LIMIT = 5;
@@ -44,6 +47,7 @@ const PaginationBar = (props) => {
       }
     }
 
+    // i = 100    ta 105
     for (
       let i = currentPage;
       i < currentPage + limit && i <= numberOfPages;
@@ -63,6 +67,18 @@ const PaginationBar = (props) => {
       );
     }
     return pagination;
+  };
+
+  const handleGoToPageClick = (e) => {
+    e.preventDefault();
+    const { value } = pageNumberRef.current;
+    if (
+      value <= numberOfPages &&
+      numberOfPages > PAGE_NUMBER_LIMIT &&
+      value > 0
+    ) {
+      onPageNumberClick(parseInt(value));
+    }
   };
 
   return (
@@ -87,6 +103,28 @@ const PaginationBar = (props) => {
         >
           آخرین
         </span>
+      ) : null}
+      {numberOfPages > 5 ? (
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginRight: "10px",
+            alignItems: "center",
+            columnGap: 10,
+          }}
+          onSubmit={handleGoToPageClick}
+        >
+          <Input
+            styles={{ input: { width: "100px" } }}
+            placeholder='شماره صفحه'
+            radius='xs'
+            ref={pageNumberRef}
+          />
+          <Button onClick={handleGoToPageClick} compact>
+            رفتن به صفحه
+          </Button>
+        </form>
       ) : null}
     </div>
   );

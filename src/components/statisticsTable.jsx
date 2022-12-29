@@ -12,9 +12,10 @@ class StatisticsTable extends Component {
     }
     const clonedData = _.cloneDeep(data);
     const analyzedData = analyze(clonedData, updateInterval);
+
     return (
-      <div>
-        <h6 className='text-center mb-4'>{title}</h6>
+      <div style={{ fontSize: 14 }}>
+        <h6 className='text-center mb-2'>{title}</h6>
         <Table
           className='table-bordered'
           columns={columns}

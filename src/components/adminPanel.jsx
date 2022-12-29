@@ -22,10 +22,11 @@ import Print from "./print";
 import EditPhoneNumber from "./editPhoneNumber";
 import EditAddress from "./editAddress";
 import jwtDecode from "jwt-decode";
+import axios from "../services/httpServices";
 import qs from "qs";
 import SMSServiceSettings from "./smsServiceSettings";
-import axios from "./../services/httpServices";
 import StatisticsSettings from "./statisticsSettings";
+import GetDeviceReport from "./getDeviceReport";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;
 const panelURL = process.env.REACT_APP_PANEL_URL;
@@ -63,6 +64,12 @@ const adminMenu = [
   },
   {
     id: "6",
+    title: "گزارش گیری",
+    link: `${dir}/admin/get-report`,
+    fontAwesomeIcon: "fa-clock",
+  },
+  {
+    id: "7",
     title: "خروج",
     fontAwesomeIcon: "fa-sign-out-alt",
     action: () => {
@@ -93,6 +100,12 @@ const clientMenu = [
   },
   {
     id: "6",
+    title: "گزارش گیری",
+    link: `${dir}/admin/get-report`,
+    fontAwesomeIcon: "fa-clock",
+  },
+  {
+    id: "7",
     title: "خروج",
     fontAwesomeIcon: "fa-sign-out-alt",
     action: () => {
@@ -126,6 +139,7 @@ class AdminPanel extends Component {
           <Route path={`${dir}/admin/users`} component={Users} />
           <Route path={`${dir}/admin/user/:username`} component={User} />
           <Route path={`${dir}/admin/devices`} component={Devices} />
+          <Route path={`${dir}/admin/get-report`} component={GetDeviceReport} />
           <Route
             path={`${dir}/admin/sms-settings`}
             component={SMSServiceSettings}

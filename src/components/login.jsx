@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LoginForm from "./loginForm";
-import icon from "../images/logo.png";
+import icon from "../images/logo.jpg";
 import jwtDecode from "jwt-decode";
 
 const dir = process.env.REACT_APP_CUSTOM_DIR;

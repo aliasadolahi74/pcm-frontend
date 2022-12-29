@@ -10,11 +10,35 @@ const startDate = new Date();
 startDate.setHours(0, 0, 0, 0);
 const endDate = new Date();
 endDate.setHours(23, 59, 59, 999);
+
+const dir = process.env.REACT_APP_CUSTOM_DIR;
+
 class Report extends Component {
   state = {
     filterStartDate: startDate.getTime(),
     filterEndDate: endDate.getTime(),
+    devices: [],
+    deviceID: null,
   };
+
+  async componentDidMount() {
+    try {
+      const devicesOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(authData),
+        url: `/get-devices.php`,
+      };
+      const devicesInfo = await axios(devicesOptions);
+      const devices = devicesInfo.data.body;
+      this.setState({ devices });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert("Bad Request");
+      }
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -27,8 +51,26 @@ class Report extends Component {
         <section>
           <form
             onSubmit={this.handleSubmit}
-            className='d-flex flex-column w-25 px-4 align-items-center'
+            className='d-flex flex-column w-25 px-4 align-items-start w-100'
           >
+            <div className='mb-3 d-flex flex-row align-items-center'>
+              <label className='text-nowrap ml-2 mb-0' htmlFor={"deviceID"}>
+                نام دستگاه
+              </label>
+              <select
+                name='deviceID'
+                id='deviceID'
+                className='form-control'
+                onChange={this.handleSelectChange}
+              >
+                <option value=''>انتخاب کنید</option>
+                {this.state.devices.map((item) => (
+                  <option key={item.key} value={item.deviceID}>
+                    {item.deviceName + " - " + item.deviceID}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className='mb-3'>
               <DatePicker
                 onClickSubmitButton={this.handleOnStartDateClick}
@@ -49,7 +91,7 @@ class Report extends Component {
             <button
               type='submit'
               onClick={this.handleSubmit}
-              className='btn btn-primary mt-2 w-50'
+              className='btn btn-primary mt-2'
             >
               دانلود گزارش
             </button>
@@ -61,7 +103,7 @@ class Report extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const deviceID = this.props.match.params.deviceID;
+    const { deviceID } = this.state;
     const { filterStartDate, filterEndDate } = this.state;
     const downloadOptions = {
       method: "POST",
@@ -79,6 +121,11 @@ class Report extends Component {
       const url = `${apiEndpoint}/download.php?token=${downloadToken}&deviceID=${deviceID}&startDatetime=${filterStartDate}&endDatetime=${filterEndDate}`;
       window.open(url);
     }
+  };
+
+  handleSelectChange = ({ currentTarget }) => {
+    const deviceID = currentTarget.value;
+    this.setState({ ...this.state, deviceID });
   };
 
   handleOnStartDateClick = ({ value }) => {

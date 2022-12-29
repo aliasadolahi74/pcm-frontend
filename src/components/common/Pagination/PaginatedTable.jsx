@@ -3,7 +3,7 @@ import PaginationBar from "./PaginationBar";
 import Table from "../table";
 import _ from "lodash";
 
-const LIMIT = 10;
+const LIMIT = 15;
 
 const PaginatedTable = ({ data, columns }) => {
   const [paginationState, setPaginationState] = useState({

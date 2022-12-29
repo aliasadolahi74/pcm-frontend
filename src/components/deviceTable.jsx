@@ -38,15 +38,11 @@ class DeviceTable extends Component {
       {
         name: "editButton",
         content: (item) => {
-          if (authData.isAdmin) {
-            return (
-              <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
-                <i className='fa fa-edit mr-1'></i>
-              </Link>
-            );
-          } else {
-            return null;
-          }
+          return authData.hasChangingPermission || authData.isAdmin ? (
+            <Link to={`${dir}/admin/edit-device/${item.deviceID}`}>
+              <i className='fa fa-edit mr-1'></i>
+            </Link>
+          ) : null;
         },
       },
       {

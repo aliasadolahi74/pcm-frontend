@@ -1,12 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import {BrowserRouter} from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import { BrowserRouter } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 ReactDOM.render(
-  <BrowserRouter><App /></BrowserRouter>, document.getElementById('root')
+  <Provider store={store}>
+    <MantineProvider theme={{ fontFamily: "IRANSans" }}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </MantineProvider>
+  </Provider>,
+
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
