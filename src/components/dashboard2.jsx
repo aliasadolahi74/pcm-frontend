@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef, useEffect} from "react";
+import React, { useCallback, useState, useRef } from "react";
 import "../services/httpServices";
 import StatisticsTable from "./statisticsTable";
 import init from "./../services/dashboardServices";
@@ -11,17 +11,11 @@ import { IconAlertCircle, IconBellOff, IconBellRinging } from "@tabler/icons";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle } from "../redux/beepSlice";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   // get data from server every 5 seconds
   // analyze it and check if data has been expired
-  const dispatch = useDispatch();
-  const interval = useRef(null);
-  const [isLoaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setLoaded(true)
-  }, []);
 
   const [soundStatus, setSoundStatus] = useState({
     loaded: false,
@@ -29,14 +23,69 @@ const Dashboard = () => {
     lastPlayAttempt: null
   });
 
-  const hiddenButtonRef = useRef(null);
 
+  const [playBeep, { sound, stop }] = useSound('/1.mp3', {
+    volume: 1.0,
+    // Add version or timestamp to prevent caching
+    format: ['mp3'],
+    onload: () => {
+      console.log('Sound loaded successfully');
+      setSoundStatus(prev => ({ ...prev, loaded: true }));
+    },
+    // Add error handling
+    onloaderror: (id, error) => {
+      console.error('Sound failed to load:', error);
+      setSoundStatus(prev => ({ ...prev, error: error.toString() }));
+    },
+    // Add playback error handling
+    onplayerror: (id, error) => {
+      console.error('Sound failed to play:', error);
+      setSoundStatus(prev => ({ ...prev, error: error.toString() }));
+    }
+  });
 
-  const [playBeep] = useSound('/1.mp3', { interrupt: true });
+  const interval = useRef(null);
 
-  const toggleSound = (item) => {
-    dispatch(toggle({ deviceID: item.deviceID }));
-  };
+  useEffect(() => {
+    // Create an audio element to test file availability
+    const audioTest = new Audio('/1.mp3');
+
+    audioTest.addEventListener('loadeddata', () => {
+      console.log('Audio file is available and loaded');
+      setSoundStatus(prev => ({ ...prev, loaded: true }));
+    });
+
+    audioTest.addEventListener('error', (e) => {
+      console.error('Error loading audio file:', e);
+      setSoundStatus(prev => ({
+        ...prev,
+        error: `Error loading audio: ${e.target.error?.message || 'Unknown error'}`
+      }));
+    });
+
+    return () => {
+      audioTest.remove();
+    };
+  }, []);
+
+  const testSound = useCallback(() => {
+    try {
+      playBeep();
+      setSoundStatus(prev => ({
+        ...prev,
+        lastPlayAttempt: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Error playing sound:', error);
+      setSoundStatus(prev => ({ ...prev, error: error.toString() }));
+    }
+  }, [playBeep]);
+
+  const silenceItems = useSelector((state) => {
+    return state.beep.silenceItems;
+  });
+
+  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     user: {},
@@ -47,9 +96,9 @@ const Dashboard = () => {
         name: "deviceName",
         label: "عنوان دستگاه",
         content: (item) => (
-            <Link to={`/admin/device/${item.deviceID}/11`}>
-              {item.deviceName}
-            </Link>
+          <Link to={`/admin/device/${item.deviceID}/11`}>
+            {item.deviceName}
+          </Link>
         ),
       },
       { name: "security", label: "وضعیت سیستم امنیتی" },
@@ -63,12 +112,12 @@ const Dashboard = () => {
         content: (item) => {
           if (item.icon) {
             return (
-                <UnstyledButton
-                    onClick={() => handleOnAlertBtnClick(item)}
-                    style={{ padding: 10 }}
-                >
-                  {item.icon}
-                </UnstyledButton>
+              <UnstyledButton
+                onClick={() => handleOnAlertBtnClick(item)}
+                style={{ padding: 10 }}
+              >
+                {item.icon}
+              </UnstyledButton>
             );
           }
         },
@@ -79,18 +128,19 @@ const Dashboard = () => {
         content: (item) => {
           if (item.icon || item.hasBeep) {
             const index = _.findIndex(
-                silenceItems,
-                (i) => i.deviceID === item.deviceID
+              silenceItems,
+              (i) => i.deviceID === item.deviceID
             );
 
             if (index === -1) {
-              hiddenButtonRef.current.click();
+              console.log("beep");
+              testSound();
             }
 
             return (
-                <UnstyledButton onClick={() => toggleSound(item)}>
-                  {index === -1 ? <IconBellRinging /> : <IconBellOff />}
-                </UnstyledButton>
+              <UnstyledButton onClick={() => toggleSound(item)}>
+                {index === -1 ? <IconBellRinging /> : <IconBellOff />}
+              </UnstyledButton>
             );
           }
         },
@@ -106,13 +156,6 @@ const Dashboard = () => {
     selectedDevice: null,
   });
 
-
-  const silenceItems = useSelector((state) => {
-    return state.beep.silenceItems;
-  });
-
-
-
   const handleOnAlertBtnClick = (item) => {
     const newState = { ...state };
     newState.modalIsOpened = true;
@@ -122,6 +165,9 @@ const Dashboard = () => {
     setState(newState);
   };
 
+  const toggleSound = (item) => {
+    dispatch(toggle({ deviceID: item.deviceID }));
+  };
 
   const tick = async () => {
     try {
@@ -202,10 +248,8 @@ const Dashboard = () => {
 
 
 
-
   return (
     <React.Fragment>
-      <button style={{display: "none"}} ref={hiddenButtonRef} onClick={() => playBeep()}>fasdfadfafd</button>
       <Modal opened={state.modalIsOpened} onClose={handleOnCloseModalBtnClick}>
         <b>
           از زمان آخرین گزارش

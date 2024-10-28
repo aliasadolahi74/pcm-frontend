@@ -7,6 +7,8 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { dateTime } from "./getDateTime";
+
 const itemValue = {
   bimetal: [
     { key: "0", value: "قطع" },
@@ -196,45 +198,54 @@ const itemValue = {
   ],
 };
 
-export function analyze(array, updateInterval = null) {
-  const result = [];
-  for (let i = 0; i < array.length; i++) {
-    const item = array[i];
-    const date = new Date(Date.parse(item.datetime));
-    if (item.controlFaze === "0") {
-      item.hasBeep = true;
-    }
-    const jdate = new JDate(date);
-    item.datetime = `${jdate.format("YYYY/MM/DD")} ${date.toLocaleTimeString(
-      "en-GB"
-    )}`;
-    item.englishDatetime = date;
-    if (updateInterval !== null) {
-      const diffInMiliSeconds = Date.now() - date.getTime();
-      const diffInSeconds = diffInMiliSeconds / 1000;
-      if (diffInSeconds > updateInterval) {
-        item.icon = (
-          <span style={{ color: "orange" }}>
-            <FontAwesomeIcon icon={faTriangleExclamation} />
-          </span>
-        );
-        item.hasAlert = true;
-      }
-    }
-    for (const [key, value] of Object.entries(item)) {
-      if (key !== "analog1" && key !== "analog2" && key !== "analog3") {
-        const reportStatusLabelArray = itemValue[key];
-        if (reportStatusLabelArray) {
-          reportStatusLabelArray.forEach((status) => {
-            /* eslint eqeqeq: 0 */
-            if (status.key == value) {
-              item[key] = status.value;
+export async function analyze(array, updateInterval = null) {
+  return new Promise((resolve, reject) => {
+    dateTime()
+      .then((serverDate) => {
+        const result = [];
+        for (let i = 0; i < array.length; i++) {
+          const item = array[i];
+
+          if (item.controlFaze === "0") {
+            item.hasBeep = true;
+          }
+          const date = new Date(item.datetime);
+          const jdate = new JDate(date);
+          item.datetime = `${jdate.format(
+            "YYYY/MM/DD"
+          )} ${date.toLocaleTimeString("en-GB")}`;
+          item.englishDatetime = date;
+          if (updateInterval !== null) {
+            const diffInMiliSeconds = serverDate - date.getTime();
+            const diffInSeconds = diffInMiliSeconds / 1000;
+            if (diffInSeconds > updateInterval) {
+              item.icon = (
+                <span style={{ color: "orange" }}>
+                  <FontAwesomeIcon icon={faTriangleExclamation} />
+                </span>
+              );
+              item.hasAlert = true;
             }
-          });
+          }
+          for (const [key, value] of Object.entries(item)) {
+            if (key !== "analog1" && key !== "analog2" && key !== "analog3") {
+              const reportStatusLabelArray = itemValue[key];
+              if (reportStatusLabelArray) {
+                reportStatusLabelArray.forEach((status) => {
+                  /* eslint eqeqeq: 0 */
+                  if (status.key == value) {
+                    item[key] = status.value;
+                  }
+                });
+              }
+            }
+          }
+          result.push(item);
         }
-      }
-    }
-    result.push(item);
-  }
-  return result;
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }

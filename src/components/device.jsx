@@ -46,7 +46,6 @@ class Device extends Component {
     };
 
     const hardwareListResponse = await axios(deviceHardwareOptions);
-    console.log(hardwareListResponse);
     const hardwareModules = hardwareListResponse.data.body;
     hardwareModules.map((item, index) =>
       hardwareModules[index].isActive === "1"
@@ -275,7 +274,9 @@ class Device extends Component {
             </button>
           </div>
           <div className='report-content'>
-            <ReportTable columns={columns} data={conditionedData} />
+            {conditionedData.length > 0 ? (
+              <ReportTable columns={columns} data={conditionedData} />
+            ) : null}
           </div>
         </div>
       </div>

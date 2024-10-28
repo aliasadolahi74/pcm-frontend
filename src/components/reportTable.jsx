@@ -5,11 +5,28 @@ import { analyze } from "./utils/reportTableAnalyze";
 import PaginatedTable from "./common/Pagination/PaginatedTable";
 
 class ReportTable extends Component {
-  render() {
-    const { columns, data } = this.props;
+  state = {
+    analyzedData: [],
+  };
+
+  componentDidMount = () => {
+    const { data } = this.props;
+    console.log("component did mount", this.props);
+    console.log("data", data);
+    if (data === undefined || data.length === 0) {
+      return null;
+    }
     const clonedData = _.cloneDeep(data);
     const analyzedData = analyze(clonedData);
-    return <PaginatedTable columns={columns} data={analyzedData} />;
+    console.log("analyzedData", analyzedData);
+    analyzedData.then((resolve) => {
+      this.setState({ analyzedData: resolve });
+    });
+  };
+
+  render() {
+    const { columns } = this.props;
+    return <PaginatedTable columns={columns} data={this.state.analyzedData} />;
   }
 }
 

@@ -8,17 +8,23 @@ class TableBody extends Component {
 
     return (
       <tbody>
-        {data.map((item) => {
-          return (
-            <tr key={item.key}>
-              {columns.map((column) => (
-                <td key={item.key + column.name}>
-                  {this.renderCell(item, column)}
-                </td>
-              ))}
-            </tr>
-          );
-        })}
+        {data && data.length > 0 ? (
+          data.map((item) => {
+            return (
+              <tr key={item.key}>
+                {columns.map((column) => (
+                  <td key={item.key + column.name}>
+                    {this.renderCell(item, column)}
+                  </td>
+                ))}
+              </tr>
+            );
+          })
+        ) : (
+          <tr>
+            <td>No Data</td>
+          </tr>
+        )}
       </tbody>
     );
   }
