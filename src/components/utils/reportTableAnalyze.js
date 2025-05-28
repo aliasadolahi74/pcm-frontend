@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import jalali from 'dayjs-jalali-plugin';
+import jalali from '@zoomit/dayjs-jalali-plugin';
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
