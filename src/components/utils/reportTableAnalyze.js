@@ -1,4 +1,5 @@
-import JDate from "jalali-date";
+import dayjs from 'dayjs';
+import jalali from 'dayjs-jalali-plugin';
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -9,6 +10,8 @@ import {
 
 import { dateTime } from "./getDateTime";
 import {store} from "../../redux/store";
+
+dayjs.extend(jalali);
 
 const itemValue = {
   bimetal: [
@@ -218,10 +221,7 @@ export async function analyze(array, updateInterval = null) {
             item.hasBeep = true;
           }
           const date = new Date(item.datetime);
-          const jdate = new JDate(date);
-          item.datetime = `${jdate.format(
-            "YYYY/MM/DD"
-          )} ${date.toLocaleTimeString("en-GB")}`;
+          item.datetime = `${dayjs(date).calendar('jalali').format('YYYY/MM/DD')} ${date.toLocaleTimeString("en-GB")}`;
           item.englishDatetime = date;
           if (updateInterval !== null) {
             const diffInMiliSeconds = serverDate.getTime() - date.getTime();
