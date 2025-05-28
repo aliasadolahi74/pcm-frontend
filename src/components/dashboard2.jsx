@@ -29,7 +29,6 @@ const Dashboard = () => {
     // Add version or timestamp to prevent caching
     format: ['mp3'],
     onload: () => {
-      console.log('Sound loaded successfully');
       setSoundStatus(prev => ({ ...prev, loaded: true }));
     },
     // Add error handling
@@ -51,7 +50,6 @@ const Dashboard = () => {
     const audioTest = new Audio('/1.mp3');
 
     audioTest.addEventListener('loadeddata', () => {
-      console.log('Audio file is available and loaded');
       setSoundStatus(prev => ({ ...prev, loaded: true }));
     });
 
@@ -133,7 +131,6 @@ const Dashboard = () => {
             );
 
             if (index === -1) {
-              console.log("beep");
               testSound();
             }
 
@@ -185,7 +182,7 @@ const Dashboard = () => {
       };
       setState(newState);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

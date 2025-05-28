@@ -140,7 +140,7 @@ class NewDeviceForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   }
 
@@ -149,7 +149,6 @@ class NewDeviceForm extends Form {
     const index = checkedHardwareCloned.indexOf(hardwareName);
 
     if (checkedHardwareCloned[index] !== undefined) {
-      console.log(checkedHardwareCloned[hardwareName]);
       const checkedHardware = checkedHardwareCloned.filter((value) => {
         return value !== hardwareName;
       });
@@ -176,7 +175,6 @@ class NewDeviceForm extends Form {
       };
       const newDeviceResponse = await axios(newDeviceOptions);
       const { data } = newDeviceResponse;
-      console.log(newDeviceResponse);
       if (data.status) {
         window.location = `${dir}/admin/devices`;
       } else {
@@ -186,7 +184,7 @@ class NewDeviceForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   };
 

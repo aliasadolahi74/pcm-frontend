@@ -44,7 +44,6 @@ class LoginForm extends Form {
     };
     const loginInfo = await axios(loginOptions);
     const status = loginInfo.data.status;
-    console.log(loginInfo);
     if (status) {
       const token = loginInfo.data.body.token;
       localStorage.setItem("token", token);

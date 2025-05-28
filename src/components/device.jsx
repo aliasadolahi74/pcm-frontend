@@ -142,7 +142,7 @@ class Device extends Component {
         } else {
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
   };
@@ -327,7 +327,6 @@ class Device extends Component {
     };
 
     const response = await axios(options);
-    console.log(response);
     if (response.data.status) {
       alert("دستور ارسال شد");
     } else {

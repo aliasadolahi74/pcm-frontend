@@ -53,7 +53,7 @@ async function init() {
         returnData.data = data;
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   } else {
     returnData.data = [];

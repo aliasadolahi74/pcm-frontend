@@ -60,7 +60,6 @@ class User extends Component {
       };
       const userDevicesResponse = await axios(userDevicesOptions);
       const devices = userDevicesResponse.data.body;
-      console.log("userInfo", userInfo);
       // const branches = allInfo.branches;
       this.setState({
         userInfo,
@@ -89,7 +88,6 @@ class User extends Component {
         url: `/setBranch.php`,
       };
       const setBranchResponse = await axios(setBranchOptions);
-      console.log(setBranchResponse);
       const { branches } = setBranchResponse.data.body;
       this.setState({ branches });
     }
@@ -110,7 +108,6 @@ class User extends Component {
         url: `/deleteBranch.php`,
       };
       const setBranchResponse = await axios(setBranchOptions);
-      console.log(setBranchResponse);
       const { branches } = setBranchResponse.data.body;
       this.setState({ branches });
     }
@@ -144,7 +141,7 @@ class User extends Component {
         alert(messageEditResponse.data.errors[0].message);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -176,7 +173,7 @@ class User extends Component {
         alert(response.data.errors[0].message);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -334,9 +331,6 @@ class User extends Component {
     this.setState({ isAlertDialogOpen: true, selectedDeleteButton: item });
   };
 
-  onUserDelete = async (item) => {
-    this.setState({ isAlertDialogOpen: true, selectedDeleteButton: item });
-  };
 
   handleAlertDialogClose = () => {
     this.setState({ isAlertDialogOpen: false });
@@ -375,14 +369,6 @@ class User extends Component {
       }
     }
     this.setState({ isAlertDialogOpen: false });
-  };
-
-  handleEditDeviceNameClick = (item) => {
-    console.log(item);
-  };
-
-  handlePageChange = (page) => {
-    this.setState({ currentPage: page });
   };
 }
 

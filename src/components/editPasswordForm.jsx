@@ -47,7 +47,6 @@ class EditPasswordForm extends Form {
       url: `/editPassword.php`,
     };
     const editPasswordResponse = await axios(editPasswordOption);
-    console.log(editPasswordResponse);
     const status = editPasswordResponse.data.status;
     if (status) {
       // window.location = `${dir}/admin/user/clientUsername`;

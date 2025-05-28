@@ -162,7 +162,7 @@ class EditDeviceForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
 
     try {
@@ -219,7 +219,7 @@ class EditDeviceForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   }
 
@@ -228,7 +228,6 @@ class EditDeviceForm extends Form {
     const index = checkedHardwareCloned.indexOf(hardwareName);
 
     if (checkedHardwareCloned[index] !== undefined) {
-      console.log(checkedHardwareCloned[hardwareName]);
       const checkedHardware = checkedHardwareCloned.filter((value) => {
         return value !== hardwareName;
       });
@@ -253,25 +252,18 @@ class EditDeviceForm extends Form {
         }),
         url: `/updateDevice.php`,
       };
-      console.log({
-        ...authData,
-        checkedHardware: checkedHardwareString,
-        ...deviceInfo,
-      });
       const newDeviceResponse = await axios(newDeviceOptions);
-      console.log(newDeviceResponse);
       const { data } = newDeviceResponse;
       if (data.status) {
         window.location = `${dir}/admin/devices`;
       } else {
-        console.log(data.errors);
-        // alert(getErrorString(data.errors));
+        console.error(data.errors);
       }
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   };
 
@@ -291,7 +283,6 @@ class EditDeviceForm extends Form {
         "/addNewHardware.php",
         qs.stringify({ token, ...item, deviceID })
       );
-      console.log({ token, ...item });
       const { data } = response;
       if (data.ok) {
         const newState = { ...this.state };
@@ -300,10 +291,10 @@ class EditDeviceForm extends Form {
         newState.hardwareList = newHardwareList;
         this.setState(newState);
       } else {
-        console.log(data.errors);
+        console.error(data.errors);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

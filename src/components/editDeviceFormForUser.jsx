@@ -147,7 +147,7 @@ class EditDeviceFormForUser extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   }
 
@@ -163,24 +163,18 @@ class EditDeviceFormForUser extends Form {
         }),
         url: `/updateDeviceForUser.php`,
       };
-      console.log({
-        ...authData,
-        ...deviceInfo,
-      });
       const newDeviceResponse = await axios(newDeviceOptions);
-      console.log(newDeviceResponse);
       const { data } = newDeviceResponse;
       if (data.status) {
         window.location = `${dir}/admin/devices`;
       } else {
-        console.log(data.errors);
-        // alert(getErrorString(data.errors));
+        console.error(data.errors);
       }
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   };
 

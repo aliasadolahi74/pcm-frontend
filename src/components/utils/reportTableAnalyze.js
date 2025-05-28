@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { dateTime } from "./getDateTime";
+import {store} from "../../redux/store";
 
 const itemValue = {
   bimetal: [
@@ -200,12 +201,19 @@ const itemValue = {
 
 export async function analyze(array, updateInterval = null) {
   return new Promise((resolve, reject) => {
+    const silenceItems = store.getState().beep.silenceItems;
     dateTime()
       .then((serverDate) => {
         const result = [];
         for (let i = 0; i < array.length; i++) {
           const item = array[i];
 
+          const isSilenced = silenceItems.some(
+              silencedItem => silencedItem.deviceID === item.deviceID
+          );
+          if (isSilenced) {
+            item.muted = true;
+          }
           if (item.controlFaze === "0") {
             item.hasBeep = true;
           }
@@ -216,7 +224,7 @@ export async function analyze(array, updateInterval = null) {
           )} ${date.toLocaleTimeString("en-GB")}`;
           item.englishDatetime = date;
           if (updateInterval !== null) {
-            const diffInMiliSeconds = serverDate - date.getTime();
+            const diffInMiliSeconds = serverDate.getTime() - date.getTime();
             const diffInSeconds = diffInMiliSeconds / 1000;
             if (diffInSeconds > updateInterval) {
               item.icon = (

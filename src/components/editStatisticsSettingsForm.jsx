@@ -36,10 +36,10 @@ class EditStatisticsSettingsForm extends Form {
         state.data = { updateInterval: body.updateInterval };
         this.setState(state);
       } else {
-        console.log(data.errors);
+        console.error(data.errors);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -63,7 +63,7 @@ class EditStatisticsSettingsForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   };
 

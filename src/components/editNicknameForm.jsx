@@ -49,7 +49,6 @@ class EditNicknameForm extends Form {
       url: `/editNickname.php`,
     };
     const editNicknameResponse = await axios(editNicknameOption);
-    console.log(editNicknameResponse);
     const status = editNicknameResponse.data.status;
     if (status) {
       window.location = `${dir}/admin/user/${clientUsername}`;

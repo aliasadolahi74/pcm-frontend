@@ -11,14 +11,11 @@ class ReportTable extends Component {
 
   componentDidMount = () => {
     const { data } = this.props;
-    console.log("component did mount", this.props);
-    console.log("data", data);
     if (data === undefined || data.length === 0) {
       return null;
     }
     const clonedData = _.cloneDeep(data);
     const analyzedData = analyze(clonedData);
-    console.log("analyzedData", analyzedData);
     analyzedData.then((resolve) => {
       this.setState({ analyzedData: resolve });
     });

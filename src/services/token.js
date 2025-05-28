@@ -16,7 +16,7 @@ const renewToken = async (token) => {
     }
   } catch (e) {
     token = null;
-    console.log(e);
+    console.error(e);
   }
 };
 

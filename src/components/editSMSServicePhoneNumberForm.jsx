@@ -39,10 +39,10 @@ class EditSMSServicePhoneNumberForm extends Form {
         state.data = { phoneNumber: body.phoneNumber };
         this.setState(state);
       } else {
-        console.log(data.errors);
+        console.error(data.errors);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -58,7 +58,6 @@ class EditSMSServicePhoneNumberForm extends Form {
         })
       );
       const { data } = response;
-      console.log(response);
       if (data.ok) {
         toast.success("شماره با موفقیت ویرایش گردید");
       } else {
@@ -68,7 +67,7 @@ class EditSMSServicePhoneNumberForm extends Form {
       if (ex.response && ex.response.status === 400) {
         alert("Bad Request");
       }
-      console.log(ex);
+      console.error(ex);
     }
   };
 
